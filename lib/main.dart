@@ -1,6 +1,7 @@
 import 'package:apps/pages/contacts.dart';
 import 'package:apps/pages/details.dart';
 import 'package:apps/pages/edit.dart';
+import 'package:apps/pages/new_contact.dart';
 import 'package:flutter/material.dart';
 
 // TODO: Flesh out contacts page
@@ -30,11 +31,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: "/",
+      initialRoute: "/new_contact",
       routes: {
         "/": (context) => Contacts(),
         "/edit": (context) => Edit(),
         "/details": (context) => Details(),
+        "/new_contact": (context) => NewContact(),
       },
     );
   }

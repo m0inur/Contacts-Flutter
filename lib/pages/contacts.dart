@@ -43,7 +43,9 @@ class _ContactsState extends State<Contacts> {
           ),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, "/new_contact");
+          },
           icon: new Icon(
             Icons.add,
             color: Colors.black,
@@ -64,6 +66,13 @@ class _ContactsState extends State<Contacts> {
   }
 
   ListTile contactListTile(i) {
+    var letter = "";
+    if (i == 0 ||
+        contacts[i].name[0].toUpperCase() !=
+            contacts[i - 1].name[0].toUpperCase()) {
+      letter = contacts[i].name[0].toUpperCase();
+    }
+
     return ListTile(
       onTap: () {
         Navigator.pushNamed(context, "/details", arguments: {
@@ -76,39 +85,57 @@ class _ContactsState extends State<Contacts> {
         child: Card(
           elevation: 0,
           color: Colors.transparent,
-
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              CircleAvatar(
-                backgroundImage: AssetImage("assets/grey-square.png"),
-                child: Text("A"),
-                radius: 25,
-              ),
-
-              SizedBox(width: 25,),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                      "${contacts[i].name}",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
+              Visibility(
+                visible: letter != "",
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(
+                      "$letter",
+                      style: TextStyle(
+                        color: Colors.blueGrey[300],
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                      ),
                     ),
                   ),
+              ),
 
-                  Text(
-                    "${contacts[i].companyName}",
-                    style: TextStyle(
-                      color: Colors.blueGrey[200],
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold
-                    ),
+              Row(
+                children: <Widget>[
+                  contacts[i].isFavourite == true ? Icon(Icons.star) : SizedBox(width: 24),
+                  SizedBox(width: 10),
+
+                  CircleAvatar(
+                    backgroundImage: AssetImage("assets/grey-square.png"),
+                    child: Text("A"),
+                    radius: 25,
+                  ),
+
+                  SizedBox(width: 25),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${contacts[i].name}",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        "${contacts[i].companyName}",
+                        style: TextStyle(
+                            color: Colors.blueGrey[200],
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                 ],
               ),
-
             ],
           ),
         ),

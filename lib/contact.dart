@@ -3,6 +3,7 @@ class Contact {
   late String companyName;
   late String avatarImage;
   late int number;
+  bool isFavourite = false;
 
   Contact(name, companyName, number, avatarImage) {
     this.name = name;

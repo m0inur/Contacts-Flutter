@@ -1,3 +1,4 @@
+import 'package:apps/custom_form.dart';
 import 'package:apps/pages/contacts.dart';
 import 'package:apps/pages/details.dart';
 import 'package:apps/pages/edit.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: "/new_contact",
+      initialRoute: "/",
       routes: {
         "/": (context) => Contacts(),
         "/edit": (context) => Edit(),

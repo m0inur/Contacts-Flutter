@@ -43,8 +43,14 @@ class _ContactsState extends State<Contacts> {
           ),
         ),
         IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, "/new_contact");
+          onPressed: () async {
+              dynamic result = await Navigator.pushNamed(context, "/new_contact");
+              if(result != null) {
+                setState(() {
+                  Contact newContact = Contact(result["name"], "google", int.parse(result["phone"]), "sim1.png");
+                  contacts.add(newContact);
+                });
+              }
           },
           icon: new Icon(
             Icons.add,

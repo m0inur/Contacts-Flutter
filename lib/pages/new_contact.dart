@@ -7,6 +7,19 @@ class NewContact extends StatefulWidget {
 }
 
 class _NewContactState extends State<NewContact> {
+  // Create a text controller and use it to retrieve the current value
+  // of the TextField.
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    nameController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
+
   AppBar newContactAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
@@ -31,7 +44,7 @@ class _NewContactState extends State<NewContact> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            saveData();
           },
           child: Text(
             "Done",
@@ -42,47 +55,26 @@ class _NewContactState extends State<NewContact> {
     );
   }
 
+  void saveData() {
+    // If data is empty
+    if(nameController.text == "" && phoneController.text == "") {
+      print("Dont push the data");
+      Navigator.pop(context);
+    } else {
+      print("Push the data");
+      // Save the data
+      Navigator.pop(context, {
+        "name": nameController.text,
+        "phone": phoneController.text,
+      });
+
+      // print("Save name ${nameController.text} and number ${phoneController.text}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget inputField (text) {
-      return             IntrinsicHeight(
-        child: Row(children: [
-          SizedBox(width: 20),
 
-          Text(
-            "$text",
-            style: TextStyle(fontSize: 18),
-          ),
-
-          SizedBox(width: 30),
-
-          VerticalDivider(
-            thickness: 1,
-            width: 10,
-            color: Colors.black,
-
-            indent: 10,
-            endIndent: 10,
-          ),
-
-          SizedBox(width: 30),
-
-          Expanded(
-            child: TextFormField(
-              initialValue: '$text',
-
-              decoration: new InputDecoration(
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  contentPadding:
-                  EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-              ),
-            ),
-          )
-        ]),
-      );
-    }
     return Scaffold(
         appBar: newContactAppBar(),
         body: Container(
@@ -95,9 +87,89 @@ class _NewContactState extends State<NewContact> {
                 radius: 50,
               )),
 
-              inputField("Name"),
-              inputField("Phone"),
+              // Name field
+              IntrinsicHeight(
+                child: Row(children: [
+                  SizedBox(width: 20),
 
+                  Text(
+                    "Name",
+                    style: TextStyle(fontSize: 18),
+                  ),
+
+                  SizedBox(width: 30),
+
+                  VerticalDivider(
+                    thickness: 1,
+                    width: 5,
+                    color: Colors.black,
+
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+
+                  Expanded(
+                    child: TextFormField(
+                      controller: nameController,
+
+                      decoration: new InputDecoration(
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding:
+                        EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                      ),
+
+                      keyboardType: TextInputType.name,
+                    ),
+                  )
+                ]),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Divider(
+                  height: 1,
+                  color: Colors.black,
+                ),
+              ),
+
+              IntrinsicHeight(
+                child: Row(children: [
+                  SizedBox(width: 21),
+
+                  Text(
+                    "Phone",
+                    style: TextStyle(fontSize: 18),
+                  ),
+
+                  SizedBox(width: 25),
+
+                  VerticalDivider(
+                    thickness: 1,
+                    width: 5,
+                    color: Colors.black,
+
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+
+                  Expanded(
+                    child: TextFormField(
+                      controller: phoneController,
+                      decoration: new InputDecoration(
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding:
+                        EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                      ),
+
+                      keyboardType: TextInputType.number,
+                    ),
+                  )
+                ]),
+              ),
             ],
           ),
         ));

@@ -19,7 +19,7 @@ class Contact {
     this.companyName = companyName;
     this.email = email;
     this.mobile = mobile;
-    this.work = work;
+    if(work is int) this.work = work;
     backgroundColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
     // this.avatarImage = avatarImage;
   }

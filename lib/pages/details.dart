@@ -7,53 +7,26 @@ class ContactDetails extends StatefulWidget {
 }
 
 class _ContactDetailsState extends State<ContactDetails> {
-  List<TextButton> items = [
-    TextButton(
-        onPressed: () {
-          print("Edit");
-        },
-        child: Text("Edit"),
-    ),
-    TextButton(
-      onPressed: () {
-        print("Delete");
-      },
-      child: Text("Delete"),
-    )
+  List<String> items = [
+    "Edit",
+    "Delete",
   ];
-
+  String? selectedUser;
   Map contact = {};
   Color starIconColor = Colors.white;
   String firstLetter = "";
 
-  // Widget dropdown() {
-  //   return DropdownButtonHideUnderline(
-  //       child: DropdownButton<TextButton> (
-  //         value: TextButton(onPressed: () {}, child: Icon(Icons.more_vert)),
-  //         items: items.map((item) => DropdownMenuItem<TextButton>(
-  //           child: item,
-  //           value: item,
-  //         )).toList(),
-  //         ),
-  //   );
-  // }
-
-  // Widget dropdown() {
-  //   return DropdownButton(
-  //     items: items
-  //         .map((TextButton item) =>
-  //         DropdownMenuItem<TextButton>(child: item, value: item))
-  //         .toList(),
-  //     onChanged: (TextButton value) {
-  //       setState(() {
-  //         // print("previous ${this._salutation}");
-  //         // print("selected $value");
-  //         // this._salutation = value;
-  //       });
-  //     },
-  //     value: item,
-  //   );
-  // }
+  void popScreen() {
+    Navigator.pop(context, {
+      "name": contact["name"],
+      "mobile": contact["mobile"],
+      "work": contact["work"],
+      "email": contact["email"],
+      "companyName": contact["companyName"],
+      "isFavorite": contact["isFavorite"],
+      "hasRemoved": contact["hasRemoved"],
+    });
+  }
 
   AppBar contactsAppBar() {
     return AppBar(
@@ -61,25 +34,61 @@ class _ContactDetailsState extends State<ContactDetails> {
       backgroundColor: Colors.transparent,
       bottomOpacity: 0.0,
       elevation: 0.0,
+
       actions: [
         Padding(
-            padding: EdgeInsets.only(top: 20, right: 30),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
+          padding: const EdgeInsets.only(right: 35, top: 20),
+          child: Row(children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    contact["isFavorite"] = !contact["isFavorite"];
+                  });
+                },
+                icon: Icon(
+                  Icons.star,
+                  color: starIconColor,
+                  size: 30,
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: DropdownButton<String>(
+                  underline: SizedBox(),
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                  ),
+
+                  value: selectedUser,
+                  onChanged: (value) {
                     setState(() {
-                      contact["isFavourite"] = !contact["isFavourite"];
+                      print("selectedUser = $value");
+                      if(value == "Delete") {
+                        contact["hasRemoved"] = true;
+                        popScreen();
+                      }
+                      selectedUser = value;
                     });
                   },
-                  icon: Icon(
-                    Icons.star,
-                    color: starIconColor,
-                    size: 30,
-                  ),
+                  items: items.map((item) {
+                    return DropdownMenuItem<String>(
+                      value: item,
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            item,
+                            style:  TextStyle(color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 ),
-              ],
-            )
+              ),
+            ],
+          ),
         ),
       ],
       bottom: PreferredSize(
@@ -165,7 +174,7 @@ class _ContactDetailsState extends State<ContactDetails> {
   @override
   Widget build(BuildContext context) {
     contact = ModalRoute.of(context)?.settings.arguments as Map;
-    starIconColor = contact["isFavourite"] == true ? Colors.yellow : Colors.white;
+    starIconColor = contact["isFavorite"] == true ? Colors.yellow : Colors.white;
     firstLetter = contact["name"][0].toUpperCase();
 
     return Scaffold(
@@ -214,7 +223,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                   children: [
                     detailsData(
                         Icons.phone_android, "MOBILE", contact["mobile"]),
-                    detailsData(Icons.phone, "WORK", contact["work"]),
+                    detailsData(Icons.phone, "WORK", contact["work"] == 89 ? "" : contact["work"]),
                     detailsData(Icons.email, "WORK", contact["email"]),
                   ],
                 ),
@@ -224,21 +233,14 @@ class _ContactDetailsState extends State<ContactDetails> {
         ),
       ),
 
+      // Return back to main screen and pass the data
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context, {
-            "name": contact["name"],
-            "mobile": contact["mobile"],
-            "work": contact["work"],
-            "email": contact["email"],
-            "companyName": contact["companyName"],
-            "isFavourite": contact["isFavourite"],
-          });
+          popScreen();
         },
         child: Icon(Icons.close),
         backgroundColor: Colors.grey[100],
       ),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

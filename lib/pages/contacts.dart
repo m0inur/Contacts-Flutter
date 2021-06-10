@@ -16,6 +16,40 @@ class _ContactsState extends State<Contacts> {
     Contact("john", "google", "john@gmail.com", 0129312039, 019829328423, null),
   ];
 
+  void contactOnTap(i) async {
+      dynamic newContact = await Navigator.pushNamed(context, "/details", arguments: {
+        "name": contacts[i].name,
+        "mobile": contacts[i].mobile,
+        "work": contacts[i].work,
+        "email": contacts[i].email,
+        "backgroundColor": contacts[i].backgroundColor,
+        "companyName": contacts[i].companyName,
+        "isFavorite": contacts[i].isFavourite,
+        "hasRemoved": false,
+      });
+
+      // if the new contact was removed
+      if(newContact["hasRemoved"] == true) {
+        print("Remove index = ${contacts.indexOf(contacts[i])}");
+
+        // remove
+        setState(() {
+          contacts.remove(contacts[i]);
+        });
+      } else {
+        if(newContact["isFavorite"] != contacts[i].isFavourite) {
+          setState(() {
+            contacts[i].name = newContact["name"];
+            contacts[i].mobile = newContact["mobile"];
+            contacts[i].work = newContact["work"];
+            contacts[i].email = newContact["email"];
+            contacts[i].companyName = newContact["companyName"];
+            contacts[i].isFavourite = newContact["isFavorite"];
+          });
+        }
+      }
+  }
+
   AppBar contactsAppBar() {
     return AppBar(
       // backgroundColor: Colors.white,
@@ -47,7 +81,7 @@ class _ContactsState extends State<Contacts> {
               if(result != null) {
                 setState(() {
                   var mobileNumber = int.parse(result["mobile"]);
-                  var workNumber = result["work"] == "" ? 01 : int.parse(result["work"]);
+                  var workNumber = result["work"] == "" ? 89 : int.parse(result["work"]);
                   Contact newContact = Contact(result["name"], result["companyName"], result["email"], mobileNumber, workNumber, null);
                   contacts.add(newContact);
                 });
@@ -80,16 +114,7 @@ class _ContactsState extends State<Contacts> {
     }
 
     return ListTile(
-      onTap: () {
-        Navigator.pushNamed(context, "/details", arguments: {
-          "name": contacts[i].name,
-          "mobile": contacts[i].mobile,
-          "work": contacts[i].work,
-          "email": contacts[i].email,
-          "companyName": contacts[i].companyName,
-          "isFavorite": contacts[i].isFavourite
-        });
-      },
+      onTap: () => contactOnTap(i),
       title: Container(
         child: Card(
           elevation: 0,
@@ -114,7 +139,7 @@ class _ContactsState extends State<Contacts> {
 
               Row(
                 children: <Widget>[
-                  contacts[i].isFavourite == true ? Icon(Icons.star) : SizedBox(width: 24),
+                  contacts[i].isFavourite == true ? Icon(Icons.star, color: Colors.yellow,) : SizedBox(width: 24),
                   SizedBox(width: 10),
 
                   Visibility(

@@ -92,9 +92,6 @@ class _NewContactState extends State<NewContact> {
             child: TextFormField(
               controller: myController,
               decoration: new InputDecoration(
-                // border: InputBorder.none,
-                // enabledBorder: InputBorder.none,
-                // disabledBorder: InputBorder.none,
                 contentPadding:
                 EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
               ),

@@ -1,5 +1,7 @@
-import 'package:apps/contact.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:contacts/contact.dart';
 
 class Contacts extends StatefulWidget {
   @override
@@ -7,18 +9,16 @@ class Contacts extends StatefulWidget {
 }
 
 class _ContactsState extends State<Contacts> {
+  Color randomColor() =>
+      Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0).withOpacity(1.0);
+
   List<Contact> contacts = [
-    Contact("Erbi Maam", "Staford University", 01854624557, "sim1.png"),
-    Contact("Abu Dauod", "Hooli Inc", 01836891273, "sim2.png"),
-    Contact("Drbi Maam", "UC Berkeley", 01854624557, "sim1.png"),
-    Contact("Erbi Maam", "Husky Energy", 01854624557, "sim1.png"),
-    Contact("Crbi Maam", "Pied Piper", 01854624557, "sim1.png"),
-    Contact("Brbi Maam", "Hooli Inc.", 01854624557, "sim1.png"),
+    Contact("john", "google", "john@gmail.com", 0129312039, 019829328423, null),
   ];
 
   AppBar contactsAppBar() {
     return AppBar(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       title: Container(
         child: Row(
           children: <Widget>[
@@ -27,9 +27,9 @@ class _ContactsState extends State<Contacts> {
             ),
             Text(
               "All",
-              style: TextStyle(color: Colors.black),
+              // style: TextStyle(color: Colors.black),
             ),
-            Icon(Icons.keyboard_arrow_down, color: Colors.black),
+            Icon(Icons.keyboard_arrow_down),
           ],
         ),
       ),
@@ -38,7 +38,6 @@ class _ContactsState extends State<Contacts> {
           onPressed: () {},
           icon: new Icon(
             Icons.search,
-            color: Colors.black,
             size: 30,
           ),
         ),
@@ -47,14 +46,15 @@ class _ContactsState extends State<Contacts> {
               dynamic result = await Navigator.pushNamed(context, "/new_contact");
               if(result != null) {
                 setState(() {
-                  Contact newContact = Contact(result["name"], "google", int.parse(result["phone"]), "sim1.png");
+                  var mobileNumber = int.parse(result["mobile"]);
+                  var workNumber = result["work"] == "" ? 01 : int.parse(result["work"]);
+                  Contact newContact = Contact(result["name"], result["companyName"], result["email"], mobileNumber, workNumber, null);
                   contacts.add(newContact);
                 });
               }
           },
           icon: new Icon(
             Icons.add,
-            color: Colors.black,
             size: 40,
           ),
         ),
@@ -83,8 +83,11 @@ class _ContactsState extends State<Contacts> {
       onTap: () {
         Navigator.pushNamed(context, "/details", arguments: {
           "name": contacts[i].name,
-          "number": contacts[i].number,
-          "simLocation": contacts[i].avatarImage,
+          "mobile": contacts[i].mobile,
+          "work": contacts[i].work,
+          "email": contacts[i].email,
+          "companyName": contacts[i].companyName,
+          "isFavorite": contacts[i].isFavourite
         });
       },
       title: Container(
@@ -114,13 +117,20 @@ class _ContactsState extends State<Contacts> {
                   contacts[i].isFavourite == true ? Icon(Icons.star) : SizedBox(width: 24),
                   SizedBox(width: 10),
 
-                  CircleAvatar(
-                    backgroundImage: AssetImage("assets/grey-square.png"),
-                    child: Text("A"),
-                    radius: 25,
+                  Visibility(
+                    // IF there is no avatar image
+                    visible: contacts[i].avatarImage == "",
+                      // Set a random background color
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage("assets/transparent-circle.png"),
+                        backgroundColor: contacts[i].backgroundColor,
+                        child: Text(letter),
+                        radius: 25,
+                      ),
                   ),
 
                   SizedBox(width: 25),
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -156,7 +166,11 @@ class _ContactsState extends State<Contacts> {
     return Scaffold(
       // backgroundColor: Colors.black,
       appBar: contactsAppBar(),
-      body: contactsList(),
+      body: Column(
+        children: <Widget> [
+          Expanded(child: contactsList()),
+        ],
+      )
     );
   }
 }

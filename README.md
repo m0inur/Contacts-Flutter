@@ -1,6 +1,6 @@
-# apps
+# contacts
 
-Phone contacts app
+A new Flutter project.
 
 ## Getting Started
 

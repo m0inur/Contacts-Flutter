@@ -1,16 +1,27 @@
+import 'dart:math';
+import 'package:flutter/material.dart';
+
 class Contact {
   late String name;
   late String companyName;
-  late String avatarImage;
-  late int number;
+  late String email;
+  late String avatarImage = "";
+
+  late int mobile;
+  late int work;
+
+  late Color backgroundColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
+
   bool isFavourite = false;
 
-  Contact(name, companyName, number, avatarImage) {
+  Contact(name, companyName, email, mobile, work, avatarImage) {
     this.name = name;
     this.companyName = companyName;
-    this.number = number;
-    this.avatarImage = avatarImage;
-    // print("Contact($name, $number, $avatarImage)");
+    this.email = email;
+    this.mobile = mobile;
+    this.work = work;
+    backgroundColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
+    // this.avatarImage = avatarImage;
   }
 
   // Convert a Dog into a Map. The keys must correspond to the names of the
@@ -18,7 +29,7 @@ class Contact {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'number': number,
+      'number': mobile,
       'avatarImage': avatarImage,
     };
   }

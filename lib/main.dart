@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
         "/edit": (context) => Edit(),
         "/details": (context) => ContactDetails(),
         "/new_contact": (context) => NewContact(),
+        "/details/edit": (context) => Edit(),
       },
     );
   }

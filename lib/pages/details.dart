@@ -22,10 +22,78 @@ class _ContactDetailsState extends State<ContactDetails> {
       "mobile": contact["mobile"],
       "work": contact["work"],
       "email": contact["email"],
+      "avatarImage": contact["avatarImage"],
       "companyName": contact["companyName"],
       "isFavorite": contact["isFavorite"],
       "hasRemoved": contact["hasRemoved"],
     });
+  }
+
+  Future editDetails() async {
+    // Go to edits page
+    dynamic editedContact =
+        await Navigator.pushNamed(context, "/details/edit", arguments: {
+      "name": contact["name"],
+      "mobile": contact["mobile"],
+      "work": contact["work"],
+      "email": contact["email"],
+      "companyName": contact["companyName"],
+          "avatarImage": contact["avatarImage"],
+        });
+
+    // If the user edited the contact data
+    if (editedContact is Map) {
+      setState(() {
+        contact = {
+          "name": editedContact["name"],
+          "mobile": editedContact["mobile"],
+          "work": editedContact["work"],
+          "email": editedContact["email"],
+          "companyName": editedContact["companyName"],
+          "avatarImage": editedContact["avatarImage"],
+          "isFavorite": contact["isFavorite"],
+          "hasRemoved": contact["hasRemoved"],
+        };
+        print(contact);
+      });
+    }
+  }
+
+  Padding topBarDropdown() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: DropdownButton<String>(
+        underline: SizedBox(),
+        icon: Icon(
+          Icons.more_vert,
+          color: Colors.white,
+        ),
+        value: selectedUser,
+        onChanged: (value) {
+          // print("selectedUser = $value");
+          if (value == "Delete") {
+            contact["hasRemoved"] = true;
+            popScreen();
+          } else {
+            editDetails();
+          }
+          // selectedUser = value;
+        },
+        items: items.map((item) {
+          return DropdownMenuItem<String>(
+            value: item,
+            child: Row(
+              children: <Widget>[
+                Text(
+                  item,
+                  style: TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   AppBar contactsAppBar() {
@@ -34,11 +102,11 @@ class _ContactDetailsState extends State<ContactDetails> {
       backgroundColor: Colors.transparent,
       bottomOpacity: 0.0,
       elevation: 0.0,
-
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 35, top: 20),
-          child: Row(children: [
+          child: Row(
+            children: [
               IconButton(
                 onPressed: () {
                   setState(() {
@@ -51,42 +119,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                   size: 30,
                 ),
               ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: DropdownButton<String>(
-                  underline: SizedBox(),
-                  icon: Icon(
-                    Icons.more_vert,
-                    color: Colors.white,
-                  ),
-
-                  value: selectedUser,
-                  onChanged: (value) {
-                    setState(() {
-                      print("selectedUser = $value");
-                      if(value == "Delete") {
-                        contact["hasRemoved"] = true;
-                        popScreen();
-                      }
-                      selectedUser = value;
-                    });
-                  },
-                  items: items.map((item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            item,
-                            style:  TextStyle(color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
+              topBarDropdown(),
             ],
           ),
         ),
@@ -112,9 +145,11 @@ class _ContactDetailsState extends State<ContactDetails> {
             fit: BoxFit.fill,
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 150, top: 135),
-          child: SizedBox(
+        Visibility(
+          visible: contact["avatarImage"].path == "",
+
+          child: Padding(
+            padding: EdgeInsets.only(left: 150, top: 135),
             child: CircleAvatar(
               radius: 36,
               backgroundColor: Colors.white,
@@ -125,6 +160,21 @@ class _ContactDetailsState extends State<ContactDetails> {
                   contact["name"][0].toUpperCase(),
                   style: TextStyle(fontSize: 20),
                 ),
+                radius: 33,
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: contact["avatarImage"].path != "",
+
+          child: Padding(
+            padding: EdgeInsets.only(left: 150, top: 135),
+            child: CircleAvatar(
+              radius: 36,
+              backgroundColor: Colors.white,
+              child: CircleAvatar(
+                backgroundImage: FileImage(contact["avatarImage"]),
                 radius: 33,
               ),
             ),
@@ -173,11 +223,16 @@ class _ContactDetailsState extends State<ContactDetails> {
 
   @override
   Widget build(BuildContext context) {
-    contact = ModalRoute.of(context)?.settings.arguments as Map;
-    starIconColor = contact["isFavorite"] == true ? Colors.yellow : Colors.white;
+    contact = contact.isNotEmpty
+        ? contact
+        : ModalRoute.of(context)?.settings.arguments as Map;
+    starIconColor =
+        contact["isFavorite"] == true ? Colors.yellow : Colors.white;
     firstLetter = contact["name"][0].toUpperCase();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+
       appBar: contactsAppBar(),
       extendBodyBehindAppBar: true,
       backgroundColor: Color(0xffbeff4f7),
@@ -223,7 +278,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                   children: [
                     detailsData(
                         Icons.phone_android, "MOBILE", contact["mobile"]),
-                    detailsData(Icons.phone, "WORK", contact["work"] == 89 ? "" : contact["work"]),
+                    detailsData(Icons.phone, "WORK",
+                        contact["work"] == 89 ? "" : contact["work"]),
                     detailsData(Icons.email, "WORK", contact["email"]),
                   ],
                 ),

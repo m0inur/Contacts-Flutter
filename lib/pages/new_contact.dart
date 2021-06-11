@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/material/input_border.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:async';
+import 'dart:io';
 
 class NewContact extends StatefulWidget {
   @override
@@ -7,19 +9,14 @@ class NewContact extends StatefulWidget {
 }
 
 class _NewContactState extends State<NewContact> {
-  // Create a text controller and use it to retrieve the current value
-  // of the TextField.
-  // final nameController = TextEditingController(text: "John");
-  // final mobileController = TextEditingController(text: "01921831293");
-  // final workController = TextEditingController(text: "");
-  // final emailController = TextEditingController(text: "john@gmail.com");
-
   final nameController = TextEditingController();
   final mobileController = TextEditingController();
   final workController = TextEditingController();
   final emailController = TextEditingController();
   final companyNameController = TextEditingController();
   double maxWidth = 30;
+  File _avatarImage = File("");
+  final picker = ImagePicker();
 
   @override
   void dispose() {
@@ -127,10 +124,23 @@ class _NewContactState extends State<NewContact> {
         "work": workController.text,
         "email": emailController.text,
         "companyName": companyNameController.text,
+        "avatarImage": _avatarImage,
       });
 
       // print("Name: ${nameController.text} Mobile: ${mobileController.text}");
     }
+  }
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _avatarImage = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
   }
 
   @override
@@ -147,11 +157,13 @@ class _NewContactState extends State<NewContact> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              Center(
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage("assets/default-user.jpg"),
-                    radius: 50,
-                  )
+              IconButton(
+                onPressed: () {
+                  print("Select image");
+                  getImage();
+                },
+                icon: _avatarImage.path != "" ? Image.file(_avatarImage) : Image.asset('assets/newImage.png'),
+                iconSize: 85,
               ),
 
               ListView(
@@ -177,18 +189,5 @@ class _NewContactState extends State<NewContact> {
           ),
         )
     );
-  }
-}
-
-class SizeConfig{
-
-  double heightSize(BuildContext context, double value){
-    value /= 100;
-    return MediaQuery.of(context).size.height * value;
-  }
-
-  double widthSize(BuildContext context, double value){
-    value /=100;
-    return MediaQuery.of(context).size.width * value;
   }
 }

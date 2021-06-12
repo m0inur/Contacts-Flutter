@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:contacts/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/contact.dart';
 
@@ -12,10 +13,12 @@ class _ContactsState extends State<Contacts> {
       Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0).withOpacity(1.0);
 
   List<Contact> contacts = [];
+  Sqflite ?sqflite;
 
   void contactOnTap(i) async {
-    dynamic newContact = await Navigator.pushNamed(
-        context, "/details", arguments: {
+    var editedContact = await Navigator.pushNamed(context, "/details",
+        arguments: {
+          "id": contacts[i].id,
       "name": contacts[i].name,
       "mobile": contacts[i].mobile,
       "work": contacts[i].work,
@@ -23,54 +26,31 @@ class _ContactsState extends State<Contacts> {
       "avatarImage": contacts[i].avatarImage,
       "backgroundColor": contacts[i].backgroundColor,
       "companyName": contacts[i].companyName,
-      "isFavorite": contacts[i].isFavourite,
+      "isFavourite": contacts[i].isFavourite,
       "hasRemoved": false,
+      "sqflite": sqflite,
     });
 
-    setState(() {
-      // if the new contact was removed
-      if (newContact["hasRemoved"] == true) {
-        // remove
-        contacts.remove(contacts[i]);
-      } else {
-        contacts[i].name = newContact["name"];
-        contacts[i].mobile =
-        newContact["mobile"] is int ? newContact["mobile"] : int.parse(
-            newContact["mobile"]);
-        if(newContact["work"] is int) {
-          contacts[i].work = newContact["work"];
-        } else {
-          if(newContact["work"] != "") {
-            contacts[i].work = int.parse(newContact["work"]);
-          }
-        }
-        contacts[i].avatarImage = newContact["avatarImage"];
-        contacts[i].email = newContact["email"];
-        contacts[i].companyName = newContact["companyName"];
-        contacts[i].isFavourite = newContact["isFavorite"];
-      }
-    });
+    // setState(() {
+    //   if(editedContact is Map) {
+    //     if(contacts[i].isFavourite != editedContact["isFavourite"]) {
+    //       contacts[i].isFavourite = editedContact["isFavourite"];
+    //     }
+    //   }
+    // });
   }
 
   void saveContact () async {
-    dynamic result = await Navigator.pushNamed(context, "/new_contact");
-    if (result != null) {
-      setState(() {
-        var mobileNumber = int.parse(result["mobile"]);
-        var workNumber = result["work"] == "" ? 89 : int.parse(
-            result["work"]);
-        Contact newContact = Contact(
-            result["id"], result["name"], result["companyName"], result["email"],
-            mobileNumber, workNumber, result["avatarImage"], false);
-
-        contacts.add(newContact);
-      });
-    }
+    await Navigator.pushNamed(context, "/new_contact", arguments: {
+      "sqflite": sqflite,
+    });
   }
 
   AppBar contactsAppBar() {
     return AppBar(
       // backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+
       title: Container(
         child: Row(
           children: <Widget>[
@@ -207,6 +187,7 @@ class _ContactsState extends State<Contacts> {
   @override
   Widget build(BuildContext context) {
     var data = ModalRoute.of(context)?.settings.arguments as Map;
+    sqflite = data["sqflite"];
     contacts = data["contacts"] == null ? contacts : data["contacts"];
     contacts
         .sort((a, b) => a.name.toUpperCase().compareTo(b.name.toUpperCase()));

@@ -1,3 +1,5 @@
+import 'package:contacts/contact.dart';
+import 'package:contacts/sqflite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,18 +17,15 @@ class _ContactDetailsState extends State<ContactDetails> {
   Map contact = {};
   Color starIconColor = Colors.white;
   String firstLetter = "";
+  bool updateContact = false;
+
+  late Sqflite sqflite;
 
   void popScreen() {
-    Navigator.pop(context, {
-      "name": contact["name"],
-      "mobile": contact["mobile"],
-      "work": contact["work"],
-      "email": contact["email"],
-      "avatarImage": contact["avatarImage"],
-      "companyName": contact["companyName"],
-      "isFavorite": contact["isFavorite"],
-      "hasRemoved": contact["hasRemoved"],
-    });
+    Navigator.pushReplacementNamed(context, "/");
+    // Navigator.pop(context, {
+    //   "isFavourite": contact["isFavourite"],
+    // });
   }
 
   Future editDetails() async {
@@ -45,16 +44,36 @@ class _ContactDetailsState extends State<ContactDetails> {
     if (editedContact is Map) {
       setState(() {
         contact = {
+          "id": contact["id"],
           "name": editedContact["name"],
           "mobile": editedContact["mobile"],
           "work": editedContact["work"],
           "email": editedContact["email"],
           "companyName": editedContact["companyName"],
           "avatarImage": editedContact["avatarImage"],
-          "isFavorite": contact["isFavorite"],
+          "isFavourite": contact["isFavourite"],
           "hasRemoved": contact["hasRemoved"],
         };
-        print(contact);
+
+        var mobileNumber = int.parse(editedContact["mobile"]);
+        var workNumber = editedContact["work"] == "" ? 89 : int.parse(
+            editedContact["work"]);
+
+        sqflite.updateContact(
+            Contact(
+                contact["id"],
+                editedContact["name"],
+                editedContact["companyName"],
+                editedContact["email"],
+                mobileNumber,
+                workNumber,
+                editedContact["avatarImage"],
+                contact["isFavourite"],
+            )
+        );
+
+
+        // print(contact);
       });
     }
   }
@@ -72,7 +91,7 @@ class _ContactDetailsState extends State<ContactDetails> {
         onChanged: (value) {
           // print("selectedUser = $value");
           if (value == "Delete") {
-            contact["hasRemoved"] = true;
+            sqflite.deleteContact(contact["id"]);
             popScreen();
           } else {
             editDetails();
@@ -110,7 +129,7 @@ class _ContactDetailsState extends State<ContactDetails> {
               IconButton(
                 onPressed: () {
                   setState(() {
-                    contact["isFavorite"] = !contact["isFavorite"];
+                    contact["isFavourite"] = !contact["isFavourite"];
                   });
                 },
                 icon: Icon(
@@ -226,8 +245,10 @@ class _ContactDetailsState extends State<ContactDetails> {
     contact = contact.isNotEmpty
         ? contact
         : ModalRoute.of(context)?.settings.arguments as Map;
+    sqflite = contact["sqflite"] == null ? sqflite : contact["sqflite"];
+
     starIconColor =
-        contact["isFavorite"] == true ? Colors.yellow : Colors.white;
+        contact["isFavourite"] == true ? Colors.yellow : Colors.white;
     firstLetter = contact["name"][0].toUpperCase();
 
     return Scaffold(

@@ -21,7 +21,7 @@ class _NewContactState extends State<NewContact> {
   int id = 0;
 
   File _avatarImage = File("");
-  Sqflite sqflite = Sqflite();
+  late Sqflite sqflite;
   final picker = ImagePicker();
 
   @override
@@ -116,7 +116,7 @@ class _NewContactState extends State<NewContact> {
     );
   }
 
-  void saveData() {
+  void saveData() async {
     // If data is empty
     if (nameController.text == "" && mobileController.text == "" ||
         mobileController.text == "") {
@@ -133,7 +133,6 @@ class _NewContactState extends State<NewContact> {
       var mobileNumber = int.parse(mobileController.text);
       var workNumber =
           workController.text == "" ? 89 : int.parse(workController.text);
-
       var newContact = Contact(
           id,
           result["name"],
@@ -141,22 +140,12 @@ class _NewContactState extends State<NewContact> {
           result["email"],
           mobileNumber,
           workNumber,
-          result["avatarImage"],
+          _avatarImage.path,
           false);
+
+      // insert contact into sqflite
       sqflite.insertContact(newContact);
       Navigator.pushReplacementNamed(context, "/");
-
-      // // Save the data
-      // Navigator.pop(context, {
-      //   "name": nameController.text,
-      //   "mobile": mobileController.text,
-      //   "work": workController.text,
-      //   "email": emailController.text,
-      //   "companyName": companyNameController.text,
-      //   "avatarImage": _avatarImage,
-      // });
-
-      // print("Name: ${nameController.text} Mobile: ${mobileController.text}");
     }
   }
 
@@ -174,6 +163,9 @@ class _NewContactState extends State<NewContact> {
 
   @override
   Widget build(BuildContext context) {
+    var data = ModalRoute.of(context)?.settings.arguments as Map;
+    sqflite = data["sqflite"];
+
     TextStyle textStyle = TextStyle(
       fontSize: 18,
     );

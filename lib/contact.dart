@@ -25,12 +25,9 @@ class Contact {
     if(work is int) this.work = work;
 
     if(avatarImage is String) {
-      avatarImage = File(avatarImage);
-    } else {
-      if(avatarImage.path != "") {
-        print("Set avatar image");
-        this.avatarImage = avatarImage;
-      }
+      this.avatarImage = File(avatarImage);
+    } else if(avatarImage is File) {
+      this.avatarImage = avatarImage;
     }
 
     if(isFavourite is int) {

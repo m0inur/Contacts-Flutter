@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:contacts/pages/details.dart';
 import 'package:contacts/pages/edit.dart';
-import 'package:flutter/material.dart';
 import 'package:contacts/pages/contacts.dart';
 import 'package:contacts/pages/new_contact.dart';
 
-
-void main() {
+void main() async {
   runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         brightness: Brightness.light,
       ),
-
       initialRoute: "/",
       routes: {
         "/": (context) => Contacts(),

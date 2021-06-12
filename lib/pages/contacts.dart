@@ -1,7 +1,8 @@
 import 'dart:math';
-import 'dart:io';
+import 'package:contacts/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/contact.dart';
+import 'package:contacts/main.dart';
 
 class Contacts extends StatefulWidget {
   @override
@@ -9,12 +10,13 @@ class Contacts extends StatefulWidget {
 }
 
 class _ContactsState extends State<Contacts> {
+  Sqflite sqflite = Sqflite();
+  int id = 0;
   Color randomColor() =>
       Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0).withOpacity(1.0);
 
-  List<Contact> contacts = [
-    Contact("john", "google", "john@gmail.com", 0129312039, 019829328423, File("")),
-  ];
+  List<Contact> contacts = [];
+
 
   void contactOnTap(i) async {
     dynamic newContact = await Navigator.pushNamed(
@@ -47,14 +49,28 @@ class _ContactsState extends State<Contacts> {
             contacts[i].work = int.parse(newContact["work"]);
           }
         }
-
         contacts[i].avatarImage = newContact["avatarImage"];
         contacts[i].email = newContact["email"];
         contacts[i].companyName = newContact["companyName"];
         contacts[i].isFavourite = newContact["isFavorite"];
-        print("Updated contact: ${contacts[i]}");
       }
     });
+  }
+
+  void saveContact () async {
+    dynamic result = await Navigator.pushNamed(context, "/new_contact");
+    if (result != null) {
+      setState(() {
+        var mobileNumber = int.parse(result["mobile"]);
+        var workNumber = result["work"] == "" ? 89 : int.parse(
+            result["work"]);
+        Contact newContact = Contact(
+            id, result["name"], result["companyName"], result["email"],
+            mobileNumber, workNumber, result["avatarImage"], false);
+        id++;
+        contacts.add(newContact);
+      });
+    }
   }
 
   AppBar contactsAppBar() {
@@ -83,20 +99,7 @@ class _ContactsState extends State<Contacts> {
           ),
         ),
         IconButton(
-          onPressed: () async {
-            dynamic result = await Navigator.pushNamed(context, "/new_contact");
-            if (result != null) {
-              setState(() {
-                var mobileNumber = int.parse(result["mobile"]);
-                var workNumber = result["work"] == "" ? 89 : int.parse(
-                    result["work"]);
-                Contact newContact = Contact(
-                    result["name"], result["companyName"], result["email"],
-                    mobileNumber, workNumber, result["avatarImage"]);
-                contacts.add(newContact);
-              });
-            }
-          },
+          onPressed: () => saveContact(),
           icon: new Icon(
             Icons.add,
             size: 40,
@@ -210,6 +213,15 @@ class _ContactsState extends State<Contacts> {
   Widget build(BuildContext context) {
     contacts
         .sort((a, b) => a.name.toUpperCase().compareTo(b.name.toUpperCase()));
+    var newContact = Contact(id, "john", "google", "john@gmail.com", 0129312039, 019829328423, "", false);
+    id++;
+
+    void initState() async {
+      await sqflite.getContacts();
+      print(sqflite.contacts);
+    }
+
+    initState();
 
     return Scaffold(
       // backgroundColor: Colors.black,

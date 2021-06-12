@@ -1,7 +1,9 @@
+import 'package:contacts/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:contacts/main.dart';
 
 class NewContact extends StatefulWidget {
   @override
@@ -157,14 +159,6 @@ class _NewContactState extends State<NewContact> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              IconButton(
-                onPressed: () {
-                  print("Select image");
-                  getImage();
-                },
-                icon: _avatarImage.path != "" ? Image.file(_avatarImage) : Image.asset('assets/newImage.png'),
-                iconSize: 85,
-              ),
 
               ListView(
                 scrollDirection: Axis.vertical,
@@ -184,6 +178,16 @@ class _NewContactState extends State<NewContact> {
                   inputField("Work", textStyle, workController, 37.0, TextInputType.number),
                 ],
               ),
+
+              IconButton(
+                onPressed: () {
+                  print("Select image");
+                  getImage();
+                },
+                icon: _avatarImage.path != "" ? Image.file(_avatarImage) : Image.asset('assets/newImage.png'),
+                iconSize: 85,
+              ),
+
               SizedBox(height: 15),
             ],
           ),

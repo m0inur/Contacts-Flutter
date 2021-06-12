@@ -1,8 +1,6 @@
 import 'dart:math';
-import 'package:contacts/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/contact.dart';
-import 'package:contacts/main.dart';
 
 class Contacts extends StatefulWidget {
   @override
@@ -10,13 +8,10 @@ class Contacts extends StatefulWidget {
 }
 
 class _ContactsState extends State<Contacts> {
-  Sqflite sqflite = Sqflite();
-  int id = 0;
   Color randomColor() =>
       Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0).withOpacity(1.0);
 
   List<Contact> contacts = [];
-
 
   void contactOnTap(i) async {
     dynamic newContact = await Navigator.pushNamed(
@@ -65,9 +60,9 @@ class _ContactsState extends State<Contacts> {
         var workNumber = result["work"] == "" ? 89 : int.parse(
             result["work"]);
         Contact newContact = Contact(
-            id, result["name"], result["companyName"], result["email"],
+            result["id"], result["name"], result["companyName"], result["email"],
             mobileNumber, workNumber, result["avatarImage"], false);
-        id++;
+
         contacts.add(newContact);
       });
     }
@@ -211,17 +206,10 @@ class _ContactsState extends State<Contacts> {
 
   @override
   Widget build(BuildContext context) {
+    var data = ModalRoute.of(context)?.settings.arguments as Map;
+    contacts = data["contacts"] == null ? contacts : data["contacts"];
     contacts
         .sort((a, b) => a.name.toUpperCase().compareTo(b.name.toUpperCase()));
-    var newContact = Contact(id, "john", "google", "john@gmail.com", 0129312039, 019829328423, "", false);
-    id++;
-
-    void initState() async {
-      await sqflite.getContacts();
-      print(sqflite.contacts);
-    }
-
-    initState();
 
     return Scaffold(
       // backgroundColor: Colors.black,

@@ -1,3 +1,4 @@
+import 'package:contacts/pages/loading_page.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/pages/details.dart';
 import 'package:contacts/pages/edit.dart';
@@ -19,9 +20,12 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         brightness: Brightness.light,
       ),
+
       initialRoute: "/",
+
       routes: {
-        "/": (context) => Contacts(),
+        "/": (context) => LoadingPage(),
+        "/contacts": (context) => Contacts(),
         "/edit": (context) => Edit(),
         "/details": (context) => ContactDetails(),
         "/new_contact": (context) => NewContact(),

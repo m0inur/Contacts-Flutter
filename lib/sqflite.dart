@@ -36,7 +36,6 @@ class Sqflite {
       contact.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-
   }
 
   Future getContacts() async {

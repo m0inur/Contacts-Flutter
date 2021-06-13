@@ -20,9 +20,9 @@ class Contact {
     this.name = name;
     this.companyName = companyName;
     this.email = email;
-    this.mobile = mobile;
+    this.mobile = mobile is String ? int.parse(mobile) : mobile;
 
-    if(work is int) this.work = work;
+    this.work = work is int ? work : int.parse(work);
 
     if(avatarImage is String) {
       this.avatarImage = File(avatarImage);

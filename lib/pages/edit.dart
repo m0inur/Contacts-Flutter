@@ -30,7 +30,7 @@ class _EditState extends State<Edit> {
     super.dispose();
   }
 
-  AppBar newContactAppBar() {
+  AppBar appBar() {
     return AppBar(
       elevation: 0.0,
       leadingWidth: 100,
@@ -41,13 +41,14 @@ class _EditState extends State<Edit> {
         },
         child: Text(
           "Cancel",
-          style: TextStyle(fontSize: 20, color: Colors.black),
+          style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
       title: Text(
         "Edit Contact",
         style: TextStyle(
           fontSize: 20,
+            color: Colors.white
         ),
       ),
       actions: [
@@ -57,7 +58,7 @@ class _EditState extends State<Edit> {
           },
           child: Text(
             "Done",
-            style: TextStyle(fontSize: 20, color: Colors.black),
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ),
 
@@ -73,12 +74,13 @@ class _EditState extends State<Edit> {
 
         Text(
           text,
-          style: TextStyle(fontSize: 18),
+          style: textStyle,
         ),
         // print(_textSize(text, TextStyle(fontSize: 18))),
         SizedBox(width: nameAndDividerGap),
 
         VerticalDivider(
+          color: Colors.white,
           thickness: 1,
           width: 5,
           indent: 7,
@@ -86,13 +88,19 @@ class _EditState extends State<Edit> {
         ),
 
         Expanded(
-          // height: SizeConfig().heightSize(context, 10.0),
-          // width: SizeConfig().widthSize(context, 1.5),
           child: TextFormField(
+            style: TextStyle(
+              color: Colors.white,
+            ),
             controller: myController,
+
             decoration: new InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
+
               contentPadding:
-                  EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+              EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
             ),
             keyboardType: type,
           ),
@@ -107,7 +115,7 @@ class _EditState extends State<Edit> {
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Divider(
           height: 10,
-          color: Colors.black,
+          color: Colors.white,
         ),
       ),
     );
@@ -152,25 +160,12 @@ class _EditState extends State<Edit> {
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: newContactAppBar(),
+        appBar: appBar(),
         body: Container(
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              IconButton(
-                onPressed: () {
-                  print("Select image");
-                  getImage();
-                },
-                icon: contact["avatarImage"].path != "" ? Image.file(contact["avatarImage"]) : Image.asset('assets/newImage.png'),
-                iconSize: 85,
-              ),
 
-              // Center(
-              //     child: CircleAvatar(
-              //   backgroundImage: AssetImage("assets/default-user.jpg"),
-              //   radius: 50,
-              // )),
               ListView(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -194,7 +189,21 @@ class _EditState extends State<Edit> {
                       TextInputType.number),
                 ],
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 50,),
+
+              IconButton(
+                onPressed: () {
+                  print("Select image");
+                  getImage();
+                },
+
+                icon: contact["avatarImage"].path != ""
+                    ? Image.file(contact["avatarImage"])
+                    : Image.asset('assets/newImage.png', color: Colors.white,),
+
+                iconSize: 100,
+
+              ),
             ],
           ),
         ));

@@ -9,6 +9,7 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
   Sqflite sqflite = Sqflite();
+
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   bool hasContacts = false;
   bool hasErrorConnectingToFirebase = false;
@@ -17,13 +18,14 @@ class _LoadingPageState extends State<LoadingPage> {
   void getContacts() async {
     await sqflite.getContacts();
     hasContacts = true;
-    // print("Got Contacts, ${sqflite.contacts}");
+    print("Got Contacts");
     isConnected();
   }
 
   void isConnected() {
     if(hasErrorConnectingToFirebase || hasConnectedToFirebase) {
       if(hasContacts) {
+
         Future.delayed(Duration.zero, () {
           Navigator.pushReplacementNamed(context, "/contacts", arguments: {
             "sqflite": sqflite,

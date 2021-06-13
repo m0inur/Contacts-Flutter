@@ -22,10 +22,6 @@ class _ContactDetailsState extends State<ContactDetails> {
   late Sqflite sqflite;
 
   void popScreen() {
-    // var mobileNumber = int.parse(contact["mobile"]);
-    // var workNumber = contact["work"] == "" ? 89 : int.parse(
-    //     contact["work"]);
-
     sqflite.updateContact(
         Contact(
           contact["id"],
@@ -38,10 +34,8 @@ class _ContactDetailsState extends State<ContactDetails> {
           contact["isFavourite"],
         )
     );
-    Navigator.pushReplacementNamed(context, "/");
-    // Navigator.pop(context, {
-    //   "isFavourite": contact["isFavourite"],
-    // });
+
+    Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
   }
 
   Future editDetails() async {
@@ -270,7 +264,7 @@ class _ContactDetailsState extends State<ContactDetails> {
 
       appBar: contactsAppBar(),
       extendBodyBehindAppBar: true,
-      backgroundColor: Color(0xffbeff4f7),
+      backgroundColor: Color(0xff303045),
 
       body: Container(
         margin: EdgeInsets.only(top: 20),
@@ -330,8 +324,8 @@ class _ContactDetailsState extends State<ContactDetails> {
           popScreen();
         },
         child: Icon(Icons.close),
-        backgroundColor: Colors.grey[100],
       ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

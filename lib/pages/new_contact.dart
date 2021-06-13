@@ -35,7 +35,7 @@ class _NewContactState extends State<NewContact> {
     super.dispose();
   }
 
-  AppBar newContactAppBar() {
+  AppBar appBar() {
     return AppBar(
       elevation: 0.0,
       leadingWidth: 100,
@@ -46,13 +46,14 @@ class _NewContactState extends State<NewContact> {
         },
         child: Text(
           "Cancel",
-          style: TextStyle(fontSize: 20, color: Colors.black),
+          style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
       title: Text(
         "New Contact",
         style: TextStyle(
           fontSize: 20,
+          color: Colors.white,
         ),
       ),
       actions: [
@@ -62,7 +63,7 @@ class _NewContactState extends State<NewContact> {
           },
           child: Text(
             "Done",
-            style: TextStyle(fontSize: 20, color: Colors.black),
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ),
       ],
@@ -76,12 +77,13 @@ class _NewContactState extends State<NewContact> {
 
         Text(
           text,
-          style: TextStyle(fontSize: 18),
+          style: textStyle,
         ),
         // print(_textSize(text, TextStyle(fontSize: 18))),
         SizedBox(width: nameAndDividerGap),
 
         VerticalDivider(
+          color: Colors.white,
           thickness: 1,
           width: 5,
           indent: 7,
@@ -93,7 +95,12 @@ class _NewContactState extends State<NewContact> {
           // width: SizeConfig().widthSize(context, 1.5),
           child: TextFormField(
             controller: myController,
+
             decoration: new InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
+
               contentPadding:
                   EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
             ),
@@ -167,12 +174,13 @@ class _NewContactState extends State<NewContact> {
     sqflite = data["sqflite"];
 
     TextStyle textStyle = TextStyle(
+      color: Colors.white70,
       fontSize: 18,
     );
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: newContactAppBar(),
+        appBar: appBar(),
         body: Container(
           child: Column(
             children: <Widget>[
@@ -200,15 +208,21 @@ class _NewContactState extends State<NewContact> {
                       TextInputType.number),
                 ],
               ),
+
+              SizedBox(height: 50,),
+
               IconButton(
                 onPressed: () {
                   print("Select image");
                   getImage();
                 },
+
                 icon: _avatarImage.path != ""
                     ? Image.file(_avatarImage)
-                    : Image.asset('assets/newImage.png'),
-                iconSize: 85,
+                    : Image.asset('assets/newImage.png', color: Colors.white,),
+
+                iconSize: 100,
+
               ),
               SizedBox(height: 15),
             ],

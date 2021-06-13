@@ -59,9 +59,9 @@ class _ContactsState extends State<Contacts> {
             ),
             Text(
               "All",
-              // style: TextStyle(color: Colors.black),
+              style: TextStyle(color: Colors.white),
             ),
-            Icon(Icons.keyboard_arrow_down),
+            Icon(Icons.keyboard_arrow_down, color: Colors.white,),
           ],
         ),
       ),

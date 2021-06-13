@@ -19,6 +19,34 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.white,
         primaryColor: Colors.white,
         brightness: Brightness.light,
+          // backgroundColor: Color(0xffb),
+
+        appBarTheme: AppBarTheme(
+          backgroundColor: Color(0xff2f2f53),
+          elevation: 0.0,
+
+          actionsIconTheme: IconThemeData(
+            color: Colors.white,
+          )
+        ),
+
+        scaffoldBackgroundColor: Color(0xff232339),
+
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Color(0xff3d3d63),
+        ),
+
+        textTheme: TextTheme(
+          bodyText1: TextStyle(),
+          bodyText2: TextStyle(),
+        ).apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.blue,
+        ),
+
+        cardTheme: CardTheme(
+          color: Color(0xff232339),
+        )
       ),
 
       initialRoute: "/",

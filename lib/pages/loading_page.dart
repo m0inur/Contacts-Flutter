@@ -1,6 +1,4 @@
-import 'package:contacts/pages/contacts.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -19,7 +17,7 @@ class _LoadingPageState extends State<LoadingPage> {
   void getContacts() async {
     await sqflite.getContacts();
     hasContacts = true;
-    print("Got Contacts");
+    // print("Got Contacts, ${sqflite.contacts}");
     isConnected();
   }
 

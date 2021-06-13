@@ -57,7 +57,8 @@ class Sqflite {
           maps[i]['mobile'],
           maps[i]['work'],
           maps[i]['avatarImage'],
-          maps[i]['isFavourite']);
+          maps[i]['isFavourite'],
+      );
     });
   }
 

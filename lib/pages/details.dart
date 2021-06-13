@@ -22,6 +22,22 @@ class _ContactDetailsState extends State<ContactDetails> {
   late Sqflite sqflite;
 
   void popScreen() {
+    // var mobileNumber = int.parse(contact["mobile"]);
+    // var workNumber = contact["work"] == "" ? 89 : int.parse(
+    //     contact["work"]);
+
+    sqflite.updateContact(
+        Contact(
+          contact["id"],
+          contact["name"],
+          contact["companyName"],
+          contact["email"],
+          contact["mobile"],
+          contact["work"],
+          contact["avatarImage"],
+          contact["isFavourite"],
+        )
+    );
     Navigator.pushReplacementNamed(context, "/");
     // Navigator.pop(context, {
     //   "isFavourite": contact["isFavourite"],
@@ -71,8 +87,6 @@ class _ContactDetailsState extends State<ContactDetails> {
                 contact["isFavourite"],
             )
         );
-
-
         // print(contact);
       });
     }

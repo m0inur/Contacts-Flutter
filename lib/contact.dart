@@ -3,6 +3,20 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 class Contact {
+  List<Color> avatarColors = [
+    Colors.deepOrange,
+    Colors.blue,
+    Colors.yellow,
+    Colors.orangeAccent,
+    Colors.teal,
+    Colors.deepPurple,
+    Colors.cyan,
+    Colors.deepOrangeAccent,
+    Colors.indigoAccent,
+    Colors.pinkAccent,
+    Colors.deepPurpleAccent,
+  ];
+
   late String name;
   late String companyName;
   late String email;
@@ -15,7 +29,7 @@ class Contact {
   late Color backgroundColor;
   bool isFavourite = false;
 
-  Contact(id, name, companyName, email, mobile, work, avatarImage, isFavourite) {
+  Contact(id, name, companyName, email, mobile, work, avatarImage, isFavourite, [color]) {
     this.id = id;
     this.name = name;
     this.companyName = companyName;
@@ -36,18 +50,28 @@ class Contact {
       this.isFavourite = isFavourite;
     }
 
-    backgroundColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
+    // if(color != null) {
+    //   print(color);
+    //   backgroundColor = new Color(int.parse(color.substring("MaterialColor(primary value: Color(".length, color.length - 2)));
+    //   return;
+    // }
+
+    // if(backgroundColor.toString() != "") return;
+    final random = new Random();
+    var i = random.nextInt(avatarColors.length);
+    backgroundColor = avatarColors[i];
   }
 
   // Convert a Dog into a Map. The keys must correspond to the names of the
   // columns in the database.
   Map<String, dynamic> toMap() {
-    // 'CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, companyName TEXT, email TEXT, avatarImage TEXT, mobile INT, work INT, isFavourite INT)',
+    // 'CREATE TABLE contacts(id INTEGER PRIMARY KEY, name TEXT, companyName TEXT, email TEXT, avatarImage TEXT, backgroundColor TEXT, mobile INT, work INT, isFavourite INT)',
     return {
       'name': name,
       'companyName': companyName,
       'email': email,
       'avatarImage': avatarImage.path,
+      'backgroundColor': backgroundColor.toString(),
       'mobile': mobile,
       'work': work,
       'isFavourite': isFavourite == false ? 0 : 1,

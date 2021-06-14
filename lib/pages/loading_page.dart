@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lottie/lottie.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -25,7 +26,6 @@ class _LoadingPageState extends State<LoadingPage> {
   void isConnected() {
     if(hasErrorConnectingToFirebase || hasConnectedToFirebase) {
       if(hasContacts) {
-
         Future.delayed(Duration.zero, () {
           Navigator.pushReplacementNamed(context, "/contacts", arguments: {
             "sqflite": sqflite,
@@ -60,11 +60,14 @@ class _LoadingPageState extends State<LoadingPage> {
           // Otherwise, show something whilst waiting for initialization to complete
           return MaterialApp(
             home: Scaffold(
+              backgroundColor: Color(0xff252549),
               body: ListView(
                 children: [
                   // Loading animation
-                  // SizedBox(height: 40),
-                  // Lottie.asset('assets/loading_animation.json'),
+                  Center(
+                    heightFactor: 6,
+                      child: Lottie.asset('assets/loading_animation.json', width: 100, height: 100)
+                  ),
                 ],
               ),
             ),

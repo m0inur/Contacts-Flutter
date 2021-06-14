@@ -104,7 +104,8 @@ class _EditState extends State<Edit> {
             ),
             keyboardType: type,
           ),
-        )
+        ),
+
       ]),
     );
   }
@@ -173,20 +174,25 @@ class _EditState extends State<Edit> {
                   // Name field
                   inputField("Name", textStyle, nameController, maxWidth,
                       TextInputType.name),
+                  SizedBox(height: 15,),
 
                   // E-mail field
                   inputField("E-Mail", textStyle, emailController, 30.0,
                       TextInputType.emailAddress),
+                  SizedBox(height: 15,),
 
                   // Company name field
                   inputField("Company Name", textStyle, companyNameController,
                       30.0, TextInputType.emailAddress),
+                  SizedBox(height: 15,),
 
                   inputField("Mobile", textStyle, mobileController, 23.0,
                       TextInputType.number),
+                  SizedBox(height: 15,),
 
                   inputField("Work", textStyle, workController, 37.0,
                       TextInputType.number),
+                  SizedBox(height: 15,),
                 ],
               ),
               SizedBox(height: 50,),

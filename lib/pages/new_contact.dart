@@ -91,9 +91,10 @@ class _NewContactState extends State<NewContact> {
         ),
 
         Expanded(
-          // height: SizeConfig().heightSize(context, 10.0),
-          // width: SizeConfig().widthSize(context, 1.5),
           child: TextFormField(
+            style: TextStyle(
+              color: Colors.white,
+            ),
             controller: myController,
 
             decoration: new InputDecoration(
@@ -102,11 +103,12 @@ class _NewContactState extends State<NewContact> {
               ),
 
               contentPadding:
-                  EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+              EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
             ),
             keyboardType: type,
           ),
-        )
+        ),
+
       ]),
     );
   }
@@ -149,6 +151,7 @@ class _NewContactState extends State<NewContact> {
           workNumber,
           _avatarImage.path,
           false);
+      print(newContact.backgroundColor);
 
       // insert contact into sqflite
       sqflite.insertContact(newContact);
@@ -191,22 +194,27 @@ class _NewContactState extends State<NewContact> {
                 children: <Widget>[
                   // Name field
                   inputField("Name", textStyle, nameController, maxWidth,
-                      TextInputType.name),
+                  TextInputType.name),
+                  SizedBox(height: 15,),
 
                   // E-mail field
                   inputField("E-Mail", textStyle, emailController, 30.0,
                       TextInputType.emailAddress),
+                  SizedBox(height: 15,),
 
                   // Company name field
                   inputField("Company Name", textStyle, companyNameController,
                       30.0, TextInputType.emailAddress),
+                  SizedBox(height: 15,),
 
                   inputField("Mobile", textStyle, mobileController, 23.0,
                       TextInputType.number),
+                  SizedBox(height: 15,),
 
                   inputField("Work", textStyle, workController, 37.0,
                       TextInputType.number),
-                ],
+                  SizedBox(height: 15,),
+                ]
               ),
 
               SizedBox(height: 50,),

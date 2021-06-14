@@ -11,11 +11,11 @@ class Sqflite {
     if (database != null) return;
 
     database = openDatabase(
-      join(await getDatabasesPath(), 'contacts_database.db'),
+      join(await getDatabasesPath(), 'contacts_db.db'),
       onCreate: (db, version) {
         print("Creating");
         return db.execute(
-          'CREATE TABLE contacts(id INTEGER PRIMARY KEY, name TEXT, companyName TEXT, email TEXT, avatarImage TEXT, mobile INT, work INT, isFavourite INT)',
+          'CREATE TABLE contacts(id INTEGER PRIMARY KEY, name TEXT, companyName TEXT, email TEXT, avatarImage TEXT, backgroundColor TEXT, mobile INT, work INT, isFavourite INT)',
         );
       },
       version: 1,
@@ -58,6 +58,7 @@ class Sqflite {
           maps[i]['work'],
           maps[i]['avatarImage'],
           maps[i]['isFavourite'],
+          maps[i]['backgroundColor'],
       );
     });
   }

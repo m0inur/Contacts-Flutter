@@ -9,14 +9,11 @@ class Contacts extends StatefulWidget {
 }
 
 class _ContactsState extends State<Contacts> {
-  Color randomColor() =>
-      Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0).withOpacity(1.0);
-
   List<Contact> contacts = [];
   Sqflite ?sqflite;
 
-  void contactOnTap(i) async {
-    var editedContact = await Navigator.pushNamed(context, "/details",
+  void contactOnTap(i) {
+    Navigator.pushNamed(context, "/details",
         arguments: {
           "id": contacts[i].id,
       "name": contacts[i].name,
@@ -30,14 +27,6 @@ class _ContactsState extends State<Contacts> {
       "hasRemoved": false,
       "sqflite": sqflite,
     });
-
-    // setState(() {
-    //   if(editedContact is Map) {
-    //     if(contacts[i].isFavourite != editedContact["isFavourite"]) {
-    //       contacts[i].isFavourite = editedContact["isFavourite"];
-    //     }
-    //   }
-    // });
   }
 
   void saveContact () async {
@@ -138,7 +127,13 @@ class _ContactsState extends State<Contacts> {
                       backgroundImage: AssetImage(
                           "assets/transparent-circle.png"),
                       backgroundColor: contacts[i].backgroundColor,
-                      child: Text(contacts[i].name[0].toUpperCase()),
+                      child: Text(
+                        contacts[i].name[0].toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       radius: 25,
                     ),
                   ),

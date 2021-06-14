@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           // backgroundColor: Color(0xffb),
 
         appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xff2f2f53),
+          backgroundColor: Color(0xff252549),
           elevation: 0.0,
 
           actionsIconTheme: IconThemeData(
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           )
         ),
 
-        scaffoldBackgroundColor: Color(0xff232339),
+        scaffoldBackgroundColor: Color(0xff232338),
 
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: Color(0xff3d3d63),
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         ),
 
         cardTheme: CardTheme(
-          color: Color(0xff232339),
+          color: Color(0xff252549),
         )
       ),
 

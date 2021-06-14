@@ -22,6 +22,17 @@ class _ContactDetailsState extends State<ContactDetails> {
   late Sqflite sqflite;
 
   void popScreen() {
+    String workNumber;
+    if(contact["work"] == "") {
+      print("Work is empty");
+      workNumber = "87";
+    } else {
+      print("Work is not empty");
+      workNumber = contact["work"].toString();
+    }
+    // String workNumber = contact["work"] == "" ? "87" : contact["work"];
+
+    print("Set background Color ${contact["backgroundColor"]}");
     sqflite.updateContact(
         Contact(
           contact["id"],
@@ -29,9 +40,10 @@ class _ContactDetailsState extends State<ContactDetails> {
           contact["companyName"],
           contact["email"],
           contact["mobile"],
-          contact["work"],
+          workNumber,
           contact["avatarImage"],
           contact["isFavourite"],
+          contact["backgroundColor"],
         )
     );
 
@@ -49,6 +61,9 @@ class _ContactDetailsState extends State<ContactDetails> {
       "companyName": contact["companyName"],
           "avatarImage": contact["avatarImage"],
         });
+
+    print("Edited contact = ");
+    print(editedContact);
 
     // If the user edited the contact data
     if (editedContact is Map) {
@@ -185,7 +200,10 @@ class _ContactDetailsState extends State<ContactDetails> {
                 backgroundColor: contact["backgroundColor"],
                 child: Text(
                   contact["name"][0].toUpperCase(),
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 radius: 33,
               ),
@@ -258,13 +276,14 @@ class _ContactDetailsState extends State<ContactDetails> {
     starIconColor =
         contact["isFavourite"] == true ? Colors.yellow : Colors.white;
     firstLetter = contact["name"][0].toUpperCase();
+    print(contact["backgroundColor"]);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
 
       appBar: contactsAppBar(),
       extendBodyBehindAppBar: true,
-      backgroundColor: Color(0xff303045),
+      backgroundColor: Color(0xff232338),
 
       body: Container(
         margin: EdgeInsets.only(top: 20),

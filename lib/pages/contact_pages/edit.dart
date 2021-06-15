@@ -1,3 +1,4 @@
+import 'package:contacts/firebaseContacts.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
@@ -9,6 +10,7 @@ class Edit extends StatefulWidget {
 }
 
 class _EditState extends State<Edit> {
+  FirebaseContacts firebaseContacts = FirebaseContacts();
   Map contact = new Map();
   double maxWidth = 30;
 

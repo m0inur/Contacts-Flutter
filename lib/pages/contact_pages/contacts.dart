@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:contacts/firebaseContacts.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/contact.dart';
@@ -11,6 +12,8 @@ class Contacts extends StatefulWidget {
 class _ContactsState extends State<Contacts> {
   List<Contact> contacts = [];
   Sqflite ?sqflite;
+  FirebaseContacts firebaseContacts = FirebaseContacts();
+  bool hasContacts = false;
 
   void contactOnTap(i) {
     Navigator.pushNamed(context, "/details",
@@ -179,6 +182,11 @@ class _ContactsState extends State<Contacts> {
     );
   }
 
+  Future getContacts () async {
+    await firebaseContacts.getContacts();
+    contacts = firebaseContacts.contacts;
+  }
+
   @override
   Widget build(BuildContext context) {
     var data = ModalRoute.of(context)?.settings.arguments as Map;
@@ -186,6 +194,11 @@ class _ContactsState extends State<Contacts> {
     contacts = data["contacts"] == null ? contacts : data["contacts"];
     contacts
         .sort((a, b) => a.name.toUpperCase().compareTo(b.name.toUpperCase()));
+
+    if(!hasContacts) {
+      getContacts();
+      hasContacts = true;
+    }
 
     return Scaffold(
       // backgroundColor: Colors.black,

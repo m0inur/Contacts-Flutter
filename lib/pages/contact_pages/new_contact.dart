@@ -1,4 +1,5 @@
 import 'package:contacts/contact.dart';
+import 'package:contacts/firebaseContacts.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +17,7 @@ class _NewContactState extends State<NewContact> {
   final emailController = TextEditingController();
   final mobileController = TextEditingController();
   final workController = TextEditingController();
+  FirebaseContacts firebaseContacts = FirebaseContacts();
 
   double maxWidth = 30;
   int id = 0;
@@ -152,6 +154,10 @@ class _NewContactState extends State<NewContact> {
           _avatarImage.path,
           false);
       print(newContact.backgroundColor);
+
+      // Insert contact into firebase
+      firebaseContacts.addContact(newContact);
+      firebaseContacts.getContacts();
 
       // insert contact into sqflite
       sqflite.insertContact(newContact);

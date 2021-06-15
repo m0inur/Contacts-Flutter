@@ -215,6 +215,7 @@ class _LoginState extends State<Login> {
                               CustomSnackBar.error(
                                 message: result,
                               ),
+                              displayDuration: Duration(seconds: 1),
                             );
                           } else {
                             showTopSnackBar(
@@ -223,7 +224,10 @@ class _LoginState extends State<Login> {
                                 message:
                                 "You have logged in successfully",
                               ),
+                              displayDuration: Duration(seconds: 1),
                             );
+
+                            Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
                           }
                         },
                         child: CircleAvatar(

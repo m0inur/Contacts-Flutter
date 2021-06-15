@@ -1,4 +1,4 @@
-import 'package:contacts/auth.dart';
+import 'package:contacts/firebaseContacts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/sqflite.dart';
@@ -11,7 +11,6 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-
   Sqflite sqflite = Sqflite();
 
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
@@ -20,16 +19,20 @@ class _LoadingPageState extends State<LoadingPage> {
   bool hasConnectedToFirebase = false;
 
   void getContacts() async {
-    await sqflite.getContacts();
-    hasContacts = true;
+    // await sqflite.getContacts();
+    // hasContacts = true;
+    FirebaseContacts firebaseContacts = FirebaseContacts();
+    firebaseContacts.deleteContact();
+    await firebaseContacts.getContacts();
+    var contacts = firebaseContacts.contacts;
     print("Got Contacts");
-    isConnected();
-  }
 
-  void isConnected() {
-    if(hasConnectedToFirebase) {
-      Navigator.pushReplacementNamed(context, "/login");
-    }
+    Future.delayed(Duration.zero, () {
+      Navigator.pushReplacementNamed(context, "/contacts", arguments: {
+        "sqflite": sqflite,
+        "contacts": contacts,
+      });
+    });
   }
 
   Future firebaseUser() async {
@@ -38,7 +41,6 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
       // Initialize FlutterFire:
       future: _initialization,
@@ -55,13 +57,13 @@ class _LoadingPageState extends State<LoadingPage> {
             hasConnectedToFirebase = true;
             // Check if user is logged in or not
             var user = FirebaseAuth.instance.currentUser;
-
             if(user == null) {
               // not logged in
-              print("User is not logged in");
+              Future.delayed(Duration.zero, () {
+                Navigator.pushReplacementNamed(context, "/login");
+              });
             } else {
               // Logged in
-              print("User is logged in");
               getContacts();
             }
           }

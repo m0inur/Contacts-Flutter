@@ -221,6 +221,8 @@ class _SignUpState extends State<SignUp> {
                               ),
                               displayDuration: Duration(seconds: 1),
                             );
+
+                            Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
                           }
                         },
                         child: CircleAvatar(

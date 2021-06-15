@@ -1,3 +1,5 @@
+import 'package:contacts/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +11,7 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
+
   Sqflite sqflite = Sqflite();
 
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
@@ -24,21 +27,18 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   void isConnected() {
-    if(hasErrorConnectingToFirebase || hasConnectedToFirebase) {
-      if(hasContacts) {
-        Future.delayed(Duration.zero, () {
-          Navigator.pushReplacementNamed(context, "/contacts", arguments: {
-            "sqflite": sqflite,
-            "contacts": sqflite.contacts,
-          });
-        });
-      }
+    if(hasConnectedToFirebase) {
+      Navigator.pushReplacementNamed(context, "/login");
     }
+  }
+
+  Future firebaseUser() async {
+    return FirebaseAuth.instance.currentUser;
   }
 
   @override
   Widget build(BuildContext context) {
-    getContacts();
+
     return FutureBuilder(
       // Initialize FlutterFire:
       future: _initialization,
@@ -53,8 +53,19 @@ class _LoadingPageState extends State<LoadingPage> {
           if(!hasErrorConnectingToFirebase) {
             print("Connected to firebase");
             hasConnectedToFirebase = true;
+            // Check if user is logged in or not
+            var user = FirebaseAuth.instance.currentUser;
+
+            if(user == null) {
+              // not logged in
+              print("User is not logged in");
+            } else {
+              // Logged in
+              print("User is logged in");
+              getContacts();
+            }
           }
-          isConnected();
+          // isConnected();
         }
 
           // Otherwise, show something whilst waiting for initialization to complete

@@ -66,19 +66,41 @@ class FirebaseContacts {
         .catchError((e) => print(e));
   }
 
-  deleteContact() async {
-    // FirebaseFirestore.instance
+  Future deleteContact(Contact targetContact) async {
+    print("Deleting contact....");
+    if(FirebaseAuth.instance.currentUser == null) return;
+    FirebaseFirestore.instance
+        .collection('ContactsDB')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("Contacts")
+        // .where("id", isEqualTo : targetContact.id)
+        .get()
+        .then((value){
+      value.docs.forEach((element) {
+        FirebaseFirestore.instance.collection("ContactsDB").doc(element.id).delete().then((value){
+          print("Success!");
+        });
+      });
+    });
+
+    // await FirebaseFirestore.instance
     //     .collection('ContactsDB')
     //     .doc(FirebaseAuth.instance.currentUser!.uid)
     //     .collection("Contacts")
-    //     .
-    // await FirebaseFirestore.instance.runTransaction((transaction) => async {
-    //   // await contact.delete(snapshot.data.documents[index].reference);
+    //     .get()
+    //     .then((QuerySnapshot querySnapshot) {
+    //   querySnapshot.docs.forEach((contact) {
+    //     // print("${contact["id"]} ${contact["name"]} ${contact["companyName"]} ${contact["email"]} ${contact["mobile"]} ${contact["work"]} ${contact["avatarImage"]} ${contact["isFavourite"]}");
+    //     if(targetContact.id.toString() == contact["id"].toString()) {
+    //       contact.
+    //       print("Target contact found");
+    //     }
+    //     // contacts.add(
+    //     //     Contact(contact["id"], contact["name"], contact["companyName"], contact["email"], contact["mobile"], contact["work"], contact["avatarImage"], contact["isFavourite"])
+    //     //   // ;
+    //     // );
+    //     // print(contacts);
+    //   });
     // });
-
-    await FirebaseFirestore.instance.runTransaction((Transaction myTrans) async {
-      print(myTrans);
-      // await myTransaction.delete(snapshot.data.documents[index].reference);
-    });
   }
 }

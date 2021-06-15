@@ -154,7 +154,7 @@ class _NewContactState extends State<NewContact> {
           _avatarImage.path,
           false);
       print(newContact.backgroundColor);
-
+      id++;
       // Insert contact into firebase
       firebaseContacts.addContact(newContact);
       firebaseContacts.getContacts();

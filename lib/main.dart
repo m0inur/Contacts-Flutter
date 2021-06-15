@@ -1,7 +1,7 @@
-import 'package:contacts/pages/authentication/auth.dart';
 import 'package:contacts/pages/authentication/login.dart';
 import 'package:contacts/pages/authentication/signUp.dart';
 import 'package:contacts/pages/contact_pages/loading_page.dart';
+import 'package:contacts/pages/phoneDialer.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/pages/contact_pages/details.dart';
 import 'package:contacts/pages/contact_pages/edit.dart';
@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
 
       routes: {
         "/": (context) => LoadingPage(),
+        "/phoneDialer": (context) => PhoneDialer(),
         "/contacts": (context) => Contacts(),
         "/edit": (context) => Edit(),
         "/details": (context) => ContactDetails(),

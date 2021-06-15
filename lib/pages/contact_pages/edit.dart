@@ -1,3 +1,4 @@
+import 'package:contacts/contact.dart';
 import 'package:contacts/firebaseContacts.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

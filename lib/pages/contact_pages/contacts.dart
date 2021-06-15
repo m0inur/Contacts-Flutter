@@ -11,14 +11,13 @@ class Contacts extends StatefulWidget {
 
 class _ContactsState extends State<Contacts> {
   List<Contact> contacts = [];
-  Sqflite ?sqflite;
+  Sqflite? sqflite;
   FirebaseContacts firebaseContacts = FirebaseContacts();
   bool hasContacts = false;
 
   void contactOnTap(i) {
-    Navigator.pushNamed(context, "/details",
-        arguments: {
-          "id": contacts[i].id,
+    Navigator.pushNamed(context, "/details", arguments: {
+      "id": contacts[i].id,
       "name": contacts[i].name,
       "mobile": contacts[i].mobile,
       "work": contacts[i].work,
@@ -32,9 +31,20 @@ class _ContactsState extends State<Contacts> {
     });
   }
 
-  void saveContact () async {
+  void saveContact() async {
     await Navigator.pushNamed(context, "/new_contact", arguments: {
       "sqflite": sqflite,
+    });
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      if (index == 1) {
+        Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+      } else {
+        Navigator.pushReplacementNamed(context, "/phoneDialer");
+      }
+      print("$index got tapped");
     });
   }
 
@@ -53,7 +63,10 @@ class _ContactsState extends State<Contacts> {
               "All",
               style: TextStyle(color: Colors.white),
             ),
-            Icon(Icons.keyboard_arrow_down, color: Colors.white,),
+            Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white,
+            ),
           ],
         ),
       ),
@@ -110,25 +123,26 @@ class _ContactsState extends State<Contacts> {
                     style: TextStyle(
                         color: Colors.blueGrey[300],
                         fontSize: 20,
-                        fontWeight: FontWeight.bold
-                    ),
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-
               Row(
                 children: <Widget>[
-                  contacts[i].isFavourite == true ? Icon(
-                    Icons.star, color: Colors.yellow,) : SizedBox(width: 24),
+                  contacts[i].isFavourite == true
+                      ? Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                        )
+                      : SizedBox(width: 24),
                   SizedBox(width: 10),
-
                   Visibility(
                     // IF there is no avatar image
                     visible: contacts[i].avatarImage.path == "",
                     // Set a random background color
                     child: CircleAvatar(
-                      backgroundImage: AssetImage(
-                          "assets/transparent-circle.png"),
+                      backgroundImage:
+                          AssetImage("assets/transparent-circle.png"),
                       backgroundColor: contacts[i].backgroundColor,
                       child: Text(
                         contacts[i].name[0].toUpperCase(),
@@ -140,7 +154,6 @@ class _ContactsState extends State<Contacts> {
                       radius: 25,
                     ),
                   ),
-
                   Visibility(
                     // IF there is no avatar image
                     visible: contacts[i].avatarImage.path != "",
@@ -151,9 +164,7 @@ class _ContactsState extends State<Contacts> {
                       radius: 25,
                     ),
                   ),
-
                   SizedBox(width: 25),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -182,7 +193,7 @@ class _ContactsState extends State<Contacts> {
     );
   }
 
-  Future getContacts () async {
+  Future getContacts() async {
     await firebaseContacts.getContacts();
     contacts = firebaseContacts.contacts;
   }
@@ -195,19 +206,43 @@ class _ContactsState extends State<Contacts> {
     contacts
         .sort((a, b) => a.name.toUpperCase().compareTo(b.name.toUpperCase()));
 
-    if(!hasContacts) {
+    if (!hasContacts) {
       getContacts();
       hasContacts = true;
     }
 
     return Scaffold(
       // backgroundColor: Colors.black,
-        appBar: contactsAppBar(),
-        body: Column(
-          children: <Widget>[
-            Expanded(child: contactsList()),
-          ],
-        )
+      appBar: contactsAppBar(),
+      body: Column(
+        children: <Widget>[
+          Expanded(child: contactsList()),
+        ],
+      ),
+
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: new Color(0xff252549),
+
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.dialpad,
+              size: 30,
+            ),
+            label: '',
+            backgroundColor: Colors.red,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contacts),
+            label: '',
+            backgroundColor: Colors.green,
+          ),
+        ],
+        currentIndex: 1,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Color(0xff8686bd),
+        onTap: _onItemTapped,
+      ),
     );
   }
 }

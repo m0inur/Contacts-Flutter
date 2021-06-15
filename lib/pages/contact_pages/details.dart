@@ -1,4 +1,5 @@
 import 'package:contacts/contact.dart';
+import 'package:contacts/firebaseContacts.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ class ContactDetails extends StatefulWidget {
 }
 
 class _ContactDetailsState extends State<ContactDetails> {
+  FirebaseContacts firebaseContacts = FirebaseContacts();
   List<String> items = [
     "Edit",
     "Delete",
@@ -114,8 +116,9 @@ class _ContactDetailsState extends State<ContactDetails> {
         onChanged: (value) {
           // print("selectedUser = $value");
           if (value == "Delete") {
-            sqflite.deleteContact(contact["id"]);
-            popScreen();
+            deleteContact();
+            // sqflite.deleteContact(contact["id"]);
+            // popScreen();
           } else {
             editDetails();
           }
@@ -227,6 +230,31 @@ class _ContactDetailsState extends State<ContactDetails> {
         ),
       ],
     );
+  }
+
+  // Delete contact
+  void deleteContact() {
+    String workNumber;
+    if(contact["work"] == "") {
+      print("Work is empty");
+      workNumber = "87";
+    } else {
+      print("Work is not empty");
+      workNumber = contact["work"].toString();
+    }
+    var newContact = Contact(
+      contact["id"],
+      contact["name"],
+      contact["companyName"],
+      contact["email"],
+      contact["mobile"],
+      workNumber,
+      contact["avatarImage"],
+      contact["isFavourite"],
+      contact["backgroundColor"],
+    );
+
+    firebaseContacts.deleteContact(newContact);
   }
 
   Row detailsData(icon, dataName, text) {

@@ -22,12 +22,13 @@ class _LoadingPageState extends State<LoadingPage> {
     // await sqflite.getContacts();
     // hasContacts = true;
     FirebaseContacts firebaseContacts = FirebaseContacts();
-    firebaseContacts.deleteContact();
+    // firebaseContacts.deleteContact();
     await firebaseContacts.getContacts();
     var contacts = firebaseContacts.contacts;
     print("Got Contacts");
 
     Future.delayed(Duration.zero, () {
+      // Navigator.pushReplacementNamed(context, "/phoneDialer");
       Navigator.pushReplacementNamed(context, "/contacts", arguments: {
         "sqflite": sqflite,
         "contacts": contacts,

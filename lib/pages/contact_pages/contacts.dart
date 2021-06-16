@@ -17,9 +17,9 @@ class _ContactsState extends State<Contacts> {
   bool hasContacts = false;
 
   void contactOnTap(i) {
-    print("Contact $i is tapped ${contacts[i]}");
     // print("${contacts[i]}");
     Navigator.pushNamed(context, "/details", arguments: {
+      "uId": contacts[i].uId,
       "id": contacts[i].id,
       "name": contacts[i].name,
       "mobile": contacts[i].mobile,
@@ -35,8 +35,10 @@ class _ContactsState extends State<Contacts> {
   }
 
   void saveContact() async {
+    print("Contacts len = ${contacts.length}");
     await Navigator.pushNamed(context, "/new_contact", arguments: {
       "sqflite": sqflite,
+      "contactsLen": contacts.length,
     });
   }
 
@@ -261,7 +263,6 @@ class _ContactsState extends State<Contacts> {
       onTap: _onItemTapped,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

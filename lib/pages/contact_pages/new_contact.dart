@@ -145,6 +145,7 @@ class _NewContactState extends State<NewContact> {
       var workNumber =
           workController.text == "" ? 89 : int.parse(workController.text);
       var newContact = Contact(
+          "",
           id,
           result["name"],
           result["companyName"],
@@ -153,8 +154,9 @@ class _NewContactState extends State<NewContact> {
           workNumber,
           _avatarImage.path,
           false);
+
+      print("ID = $id");
       print(newContact.backgroundColor);
-      id++;
       // Insert contact into firebase
       firebaseContacts.addContact(newContact);
       firebaseContacts.getContacts();
@@ -181,6 +183,8 @@ class _NewContactState extends State<NewContact> {
   Widget build(BuildContext context) {
     var data = ModalRoute.of(context)?.settings.arguments as Map;
     sqflite = data["sqflite"];
+    id = data["contactsLen"] + 1;
+    print("Id = ${data["contactsLen"] + 1}");
 
     TextStyle textStyle = TextStyle(
       color: Colors.white70,

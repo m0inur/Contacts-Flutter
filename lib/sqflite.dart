@@ -50,6 +50,7 @@ class Sqflite {
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     contacts = List.generate(maps.length, (i) {
       return Contact(
+          maps[i]['uId'],
           maps[i]['id'],
           maps[i]['name'],
           maps[i]['companyName'],

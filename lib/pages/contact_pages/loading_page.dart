@@ -1,5 +1,4 @@
 import 'package:contacts/firebaseContacts.dart';
-import 'package:contacts/pages/contact_pages/contacts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/sqflite.dart';
@@ -18,7 +17,7 @@ class _LoadingPageState extends State<LoadingPage> {
   bool hasContacts = false;
   bool hasErrorConnectingToFirebase = false;
   bool hasConnectedToFirebase = false;
-  @override
+
   void getContacts() async {
     // await sqflite.getContacts();
     // hasContacts = true;
@@ -41,10 +40,10 @@ class _LoadingPageState extends State<LoadingPage> {
       //   }
       // );
 
-      // Navigator.pushReplacementNamed(context, "/contacts", arguments: {
-      //   "sqflite": sqflite,
-      //   "contacts": contacts,
-      // });
+      Navigator.pushReplacementNamed(context, "/contacts", arguments: {
+        "sqflite": sqflite,
+        "contacts": contacts,
+      });
     });
   }
 

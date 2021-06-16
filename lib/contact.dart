@@ -17,6 +17,7 @@ class Contact {
     Colors.deepPurpleAccent,
   ];
 
+  late String uId;
   late String name;
   late String companyName;
   late String email;
@@ -29,7 +30,8 @@ class Contact {
   late Color backgroundColor;
   bool isFavourite = false;
 
-  Contact(id, name, companyName, email, mobile, work, avatarImage, isFavourite, [color]) {
+  Contact(uId, id, name, companyName, email, mobile, work, avatarImage, isFavourite, [color]) {
+    if (uId != "") this.uId = uId;
     this.id = id;
     this.name = name;
     this.companyName = companyName;

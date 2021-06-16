@@ -33,10 +33,9 @@ class _ContactDetailsState extends State<ContactDetails> {
       workNumber = contact["work"].toString();
     }
     // String workNumber = contact["work"] == "" ? "87" : contact["work"];
-
-    print("Set background Color ${contact["backgroundColor"]}");
-    sqflite.updateContact(
-        Contact(
+    print(contact["avatarImage"]);
+    var newContact = Contact(
+          contact["uId"],
           contact["id"],
           contact["name"],
           contact["companyName"],
@@ -46,8 +45,24 @@ class _ContactDetailsState extends State<ContactDetails> {
           contact["avatarImage"],
           contact["isFavourite"],
           contact["backgroundColor"],
-        )
-    );
+        );
+    firebaseContacts.updateContact(newContact);
+
+
+    print("Set background Color ${contact["backgroundColor"]}");
+    // sqflite.updateContact(
+    //     Contact(
+    //       contact["id"],
+    //       contact["name"],
+    //       contact["companyName"],
+    //       contact["email"],
+    //       contact["mobile"],
+    //       workNumber,
+    //       contact["avatarImage"],
+    //       contact["isFavourite"],
+    //       contact["backgroundColor"],
+    //     )
+    // );
 
     Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
   }
@@ -71,6 +86,7 @@ class _ContactDetailsState extends State<ContactDetails> {
     if (editedContact is Map) {
       setState(() {
         contact = {
+          "uId": contact["uId"],
           "id": contact["id"],
           "name": editedContact["name"],
           "mobile": editedContact["mobile"],
@@ -86,18 +102,18 @@ class _ContactDetailsState extends State<ContactDetails> {
         var workNumber = editedContact["work"] == "" ? 89 : int.parse(
             editedContact["work"]);
 
-        sqflite.updateContact(
-            Contact(
-                contact["id"],
-                editedContact["name"],
-                editedContact["companyName"],
-                editedContact["email"],
-                mobileNumber,
-                workNumber,
-                editedContact["avatarImage"],
-                contact["isFavourite"],
-            )
-        );
+        // sqflite.updateContact(
+        //     Contact(
+        //         contact["id"],
+        //         editedContact["name"],
+        //         editedContact["companyName"],
+        //         editedContact["email"],
+        //         mobileNumber,
+        //         workNumber,
+        //         editedContact["avatarImage"],
+        //         contact["isFavourite"],
+        //     )
+        // );
         // print(contact);
       });
     }
@@ -225,28 +241,34 @@ class _ContactDetailsState extends State<ContactDetails> {
   }
 
   // Delete contact
-  void deleteContact() {
-    String workNumber;
-    if(contact["work"] == "") {
-      print("Work is empty");
-      workNumber = "87";
-    } else {
-      print("Work is not empty");
-      workNumber = contact["work"].toString();
-    }
-    var newContact = Contact(
-      contact["id"],
-      contact["name"],
-      contact["companyName"],
-      contact["email"],
-      contact["mobile"],
-      workNumber,
-      contact["avatarImage"],
-      contact["isFavourite"],
-      contact["backgroundColor"],
-    );
+  void deleteContact() async {
+    await firebaseContacts.deleteContact(contact["uId"]);
+    Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
 
-    firebaseContacts.deleteContact(newContact);
+    // String workNumber;
+    //
+    // if(contact["work"] == "") {
+    //   print("Work is empty");
+    //   workNumber = "87";
+    // } else {
+    //   print("Work is not empty");
+    //   workNumber = contact["work"].toString();
+    // }
+    // print("Contact uId = ${contact["uId"]}");
+    // var newContact = Contact(
+    //   contact["uId"],
+    //   contact["id"],
+    //   contact["name"],
+    //   contact["companyName"],
+    //   contact["email"],
+    //   contact["mobile"],
+    //   workNumber,
+    //   contact["avatarImage"],
+    //   contact["isFavourite"],
+    //   contact["backgroundColor"],
+    // );
+
+    // firebaseContacts.deleteContact(newContact);
   }
 
   Row detailsData(icon, dataName, text) {
@@ -296,6 +318,7 @@ class _ContactDetailsState extends State<ContactDetails> {
     starIconColor =
         contact["isFavourite"] == true ? Colors.yellow : Colors.white;
     firstLetter = contact["name"][0].toUpperCase();
+    print("Build(_) uId = ${contact["uId"]}");
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -305,14 +328,14 @@ class _ContactDetailsState extends State<ContactDetails> {
       backgroundColor: Color(0xff232338),
 
       body: Container(
-        height: 480,
-        margin: EdgeInsets.only(top: 20),
+        height: 500,
+        margin: EdgeInsets.only(top: 10),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
           elevation: 1,
-          margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+          margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

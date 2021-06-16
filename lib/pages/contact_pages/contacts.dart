@@ -1,9 +1,9 @@
-import 'dart:math';
 import 'package:contacts/firebaseContacts.dart';
 import 'package:contacts/pages/phoneDialer.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/contact.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class Contacts extends StatefulWidget {
   @override
@@ -17,6 +17,8 @@ class _ContactsState extends State<Contacts> {
   bool hasContacts = false;
 
   void contactOnTap(i) {
+    print("Contact $i is tapped ${contacts[i]}");
+    // print("${contacts[i]}");
     Navigator.pushNamed(context, "/details", arguments: {
       "id": contacts[i].id,
       "name": contacts[i].name,
@@ -88,6 +90,10 @@ class _ContactsState extends State<Contacts> {
     );
   }
 
+  void _callNumber(number) async{
+    FlutterPhoneDirectCaller.callNumber(number);
+  }
+
   ListTile contactListTile(i) {
     var letter = "";
     if (i == 0 ||
@@ -104,6 +110,7 @@ class _ContactsState extends State<Contacts> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              // Name letter category
               Visibility(
                 visible: letter != "",
                 child: Padding(
@@ -117,6 +124,7 @@ class _ContactsState extends State<Contacts> {
                   ),
                 ),
               ),
+
               Row(
                 children: <Widget>[
                   contacts[i].isFavourite == true
@@ -125,7 +133,9 @@ class _ContactsState extends State<Contacts> {
                           color: Colors.yellow,
                         )
                       : SizedBox(width: 24),
+
                   SizedBox(width: 10),
+                  // Show avatar
                   Visibility(
                     // IF there is no avatar image
                     visible: contacts[i].avatarImage.path == "",
@@ -154,6 +164,8 @@ class _ContactsState extends State<Contacts> {
                       radius: 25,
                     ),
                   ),
+
+
                   SizedBox(width: 25),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,6 +185,28 @@ class _ContactsState extends State<Contacts> {
                             fontWeight: FontWeight.bold),
                       ),
                     ],
+                  ),
+
+                  SizedBox(width: 125),
+
+                  TextButton(
+                    onPressed: () {
+                      _callNumber(contacts[i].mobile.toString());
+                    },
+                    child: CircleAvatar(
+                      backgroundImage:
+                      AssetImage("assets/transparent-circle.png"),
+                      backgroundColor: Color(0xff3d3d63),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          Icons.phone,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                      radius: 27,
+                    ),
                   ),
                 ],
               ),

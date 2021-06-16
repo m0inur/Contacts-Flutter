@@ -8,6 +8,7 @@ class FirebaseContacts {
       .collection('ContactsDB')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection("Contacts");
+
   List<Contact> contacts = [];
 
   // Contact(id, name, companyName, email, mobile, work, avatarImage, isFavourite, [color]) {

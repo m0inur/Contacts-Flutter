@@ -40,10 +40,11 @@ class _LoadingPageState extends State<LoadingPage> {
       //       "contacts": contacts,
       //   }
       // );
-      Navigator.pushReplacementNamed(context, "/contacts", arguments: {
-        "sqflite": sqflite,
-        "contacts": contacts,
-      });
+
+      // Navigator.pushReplacementNamed(context, "/contacts", arguments: {
+      //   "sqflite": sqflite,
+      //   "contacts": contacts,
+      // });
     });
   }
 
@@ -128,14 +129,12 @@ class _LoadingPageState extends State<LoadingPage> {
           return MaterialApp(
             home: Scaffold(
               backgroundColor: Color(0xff252549),
-              body: ListView(
-                children: [
-                  // Loading animation
-                  Center(
-                    heightFactor: 6,
-                      child: Lottie.asset('assets/loading_animation.json', width: 100, height: 100)
-                  ),
-                ],
+                  body: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(child: Lottie.asset('assets/loading_animation.json', width: 100, height: 100)),
+                    ],
               ),
 
               bottomNavigationBar: bottomNavigationBar(),

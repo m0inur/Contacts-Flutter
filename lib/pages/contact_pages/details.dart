@@ -296,7 +296,6 @@ class _ContactDetailsState extends State<ContactDetails> {
     starIconColor =
         contact["isFavourite"] == true ? Colors.yellow : Colors.white;
     firstLetter = contact["name"][0].toUpperCase();
-    print(contact["backgroundColor"]);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -306,13 +305,14 @@ class _ContactDetailsState extends State<ContactDetails> {
       backgroundColor: Color(0xff232338),
 
       body: Container(
+        height: 480,
         margin: EdgeInsets.only(top: 20),
         child: Card(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(15.0),
           ),
           elevation: 1,
-          margin: EdgeInsets.fromLTRB(20, 20, 20, 120),
+          margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,7 +341,7 @@ class _ContactDetailsState extends State<ContactDetails> {
 
               // Data details
               Padding(
-                padding: EdgeInsets.all(35),
+                padding: EdgeInsets.only(left: 40, top: 40),
                 child: Column(
                   children: [
                     detailsData(
@@ -349,22 +349,6 @@ class _ContactDetailsState extends State<ContactDetails> {
                     detailsData(Icons.phone, "WORK",
                         contact["work"] == 89 ? "" : contact["work"]),
                     detailsData(Icons.email, "WORK", contact["email"]),
-
-                    SizedBox(height: 20,),
-
-                    CircleAvatar(
-                      backgroundImage:
-                      AssetImage("assets/transparent-circle.png"),
-                      backgroundColor: Color(0xff3d3d63),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          Icons.phone,
-                          color: Colors.white,
-                        ),
-                      ),
-                      radius: 30,
-                    ),
                   ],
                 ),
               ),

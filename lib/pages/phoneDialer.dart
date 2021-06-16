@@ -27,6 +27,7 @@ class _PhoneDialerState extends State<PhoneDialer> {
     Widget circleAvatar(text, fontSize) {
       return TextButton(
         onPressed: () {
+          if(numberController.text.length > 15) return;
           setState(() {
             numberController.text += text;
           });
@@ -62,10 +63,11 @@ class _PhoneDialerState extends State<PhoneDialer> {
             child: Text(
               numberController.text,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 25,
               ),
             ),
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -135,8 +137,9 @@ class _PhoneDialerState extends State<PhoneDialer> {
 
               TextButton(
                 onPressed: () {
+                  var text = numberController.text;
+                  if(text == "") return;
                   setState(() {
-                    var text = numberController.text;
                     var subString = text.substring(0, text.length - 1);
 
                     numberController.text = subString;
@@ -220,17 +223,15 @@ class _PhoneDialerState extends State<PhoneDialer> {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            SizedBox(
-              height: 60,
-            ),
             dialPad(),
+            SizedBox(height: 20),
           ],
         ),
 
       ),
         bottomNavigationBar: bottomNavigationBar()
     );
-
   }
 }

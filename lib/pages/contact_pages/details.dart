@@ -182,19 +182,11 @@ class _ContactDetailsState extends State<ContactDetails> {
     return Stack(
       // crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-          child: Image.asset(
-            "assets/banner.png",
-            fit: BoxFit.fill,
-          ),
-        ),
         Visibility(
           visible: contact["avatarImage"].path == "",
 
           child: Padding(
-            padding: EdgeInsets.only(left: 150, top: 135),
+            padding: EdgeInsets.only(left: 150, top: 50),
             child: CircleAvatar(
               radius: 36,
               backgroundColor: Colors.white,
@@ -357,6 +349,22 @@ class _ContactDetailsState extends State<ContactDetails> {
                     detailsData(Icons.phone, "WORK",
                         contact["work"] == 89 ? "" : contact["work"]),
                     detailsData(Icons.email, "WORK", contact["email"]),
+
+                    SizedBox(height: 20,),
+
+                    CircleAvatar(
+                      backgroundImage:
+                      AssetImage("assets/transparent-circle.png"),
+                      backgroundColor: Color(0xff3d3d63),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          Icons.phone,
+                          color: Colors.white,
+                        ),
+                      ),
+                      radius: 30,
+                    ),
                   ],
                 ),
               ),
@@ -370,7 +378,7 @@ class _ContactDetailsState extends State<ContactDetails> {
         onPressed: () {
           popScreen();
         },
-        child: Icon(Icons.close),
+        child: Icon(Icons.close, color: Colors.white,),
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

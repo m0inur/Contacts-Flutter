@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:contacts/firebaseContacts.dart';
+import 'package:contacts/pages/phoneDialer.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/contact.dart';
@@ -34,17 +35,6 @@ class _ContactsState extends State<Contacts> {
   void saveContact() async {
     await Navigator.pushNamed(context, "/new_contact", arguments: {
       "sqflite": sqflite,
-    });
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      if (index == 1) {
-        Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
-      } else {
-        Navigator.pushReplacementNamed(context, "/phoneDialer");
-      }
-      print("$index got tapped");
     });
   }
 
@@ -198,9 +188,53 @@ class _ContactsState extends State<Contacts> {
     contacts = firebaseContacts.contacts;
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      if(index == 0) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => PhoneDialer(),
+            transitionDuration: Duration(seconds: 0),
+          ),
+        );
+      }
+    });
+  }
+
+  BottomNavigationBar bottomNavigationBar() {
+    return BottomNavigationBar(
+      backgroundColor: new Color(0xff252549),
+
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.dialpad,
+            size: 30,
+          ),
+          label: '',
+          backgroundColor: Colors.red,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.contacts),
+          label: '',
+          backgroundColor: Colors.green,
+        ),
+      ],
+      currentIndex: 1,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Color(0xff8686bd),
+      onTap: _onItemTapped,
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     var data = ModalRoute.of(context)?.settings.arguments as Map;
+    if(data["contacts"] == null) {
+      Navigator.pushReplacementNamed(context, "/");
+    }
     sqflite = data["sqflite"];
     contacts = data["contacts"] == null ? contacts : data["contacts"];
     contacts
@@ -220,29 +254,7 @@ class _ContactsState extends State<Contacts> {
         ],
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: new Color(0xff252549),
-
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.dialpad,
-              size: 30,
-            ),
-            label: '',
-            backgroundColor: Colors.red,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.contacts),
-            label: '',
-            backgroundColor: Colors.green,
-          ),
-        ],
-        currentIndex: 1,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Color(0xff8686bd),
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: bottomNavigationBar(),
     );
   }
 }

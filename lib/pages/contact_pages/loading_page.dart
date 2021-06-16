@@ -1,4 +1,5 @@
 import 'package:contacts/firebaseContacts.dart';
+import 'package:contacts/pages/contact_pages/contacts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/sqflite.dart';
@@ -17,7 +18,7 @@ class _LoadingPageState extends State<LoadingPage> {
   bool hasContacts = false;
   bool hasErrorConnectingToFirebase = false;
   bool hasConnectedToFirebase = false;
-
+  @override
   void getContacts() async {
     // await sqflite.getContacts();
     // hasContacts = true;
@@ -28,7 +29,17 @@ class _LoadingPageState extends State<LoadingPage> {
     print("Got Contacts");
 
     Future.delayed(Duration.zero, () {
-      // Navigator.pushReplacementNamed(context, "/phoneDialer");
+      // Navigator.pushReplacement(
+      //   context,
+      //   PageRouteBuilder(
+      //     pageBuilder: (context, animation1, animation2) => Contacts(),
+      //     transitionDuration: Duration(seconds: 0),
+      //   ),
+      //   result: {
+      //       "sqflite": sqflite,
+      //       "contacts": contacts,
+      //   }
+      // );
       Navigator.pushReplacementNamed(context, "/contacts", arguments: {
         "sqflite": sqflite,
         "contacts": contacts,
@@ -38,6 +49,48 @@ class _LoadingPageState extends State<LoadingPage> {
 
   Future firebaseUser() async {
     return FirebaseAuth.instance.currentUser;
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      if(index == 1) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => LoadingPage(),
+            transitionDuration: Duration(seconds: 0),
+          ),
+        );
+      } else {
+        Navigator.pushReplacementNamed(context, "/phoneDialer");
+      }
+    });
+  }
+
+  BottomNavigationBar bottomNavigationBar() {
+    return BottomNavigationBar(
+      backgroundColor: new Color(0xff252549),
+
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.dialpad,
+            size: 30,
+          ),
+          label: '',
+          backgroundColor: Colors.red,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.contacts),
+          label: '',
+          backgroundColor: Colors.green,
+        ),
+      ],
+      currentIndex: 1,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Color(0xff8686bd),
+      onTap: _onItemTapped,
+    );
   }
 
   @override
@@ -84,7 +137,10 @@ class _LoadingPageState extends State<LoadingPage> {
                   ),
                 ],
               ),
+
+              bottomNavigationBar: bottomNavigationBar(),
             ),
+
           );
       },
     );

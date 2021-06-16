@@ -1,4 +1,8 @@
+import 'package:contacts/pages/contact_pages/contacts.dart';
+import 'package:contacts/pages/contact_pages/loading_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class PhoneDialer extends StatefulWidget {
   @override
@@ -15,6 +19,10 @@ class _PhoneDialerState extends State<PhoneDialer> {
     super.dispose();
   }
 
+  void _callNumber() async{
+    FlutterPhoneDirectCaller.callNumber(numberController.text);
+  }
+
   Widget build(BuildContext context) {
     Widget circleAvatar(text, fontSize) {
       return TextButton(
@@ -28,7 +36,7 @@ class _PhoneDialerState extends State<PhoneDialer> {
           children: [
             CircleAvatar(
               backgroundImage: AssetImage("assets/transparent-circle.png"),
-              backgroundColor: Colors.blueGrey[300],
+              backgroundColor: Color(0xff3d3d63),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
@@ -101,14 +109,14 @@ class _PhoneDialerState extends State<PhoneDialer> {
 
               TextButton(
                 onPressed: () {
-                  print("Call");
+                  _callNumber();
                 },
                 child: Column(
                   children: [
                     CircleAvatar(
                       backgroundImage:
                           AssetImage("assets/transparent-circle.png"),
-                      backgroundColor: Colors.green[400],
+                      backgroundColor: Color(0xff3d3d63),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Icon(
@@ -116,7 +124,7 @@ class _PhoneDialerState extends State<PhoneDialer> {
                           color: Colors.white,
                         ),
                       ),
-                      radius: 30,
+                      radius: 32,
                     ),
                     SizedBox(
                       width: 80,
@@ -140,7 +148,7 @@ class _PhoneDialerState extends State<PhoneDialer> {
                     CircleAvatar(
                       backgroundImage:
                       AssetImage("assets/transparent-circle.png"),
-                      backgroundColor: Colors.blueGrey[300],
+                      backgroundColor: Color(0xff3d3d63),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Icon(
@@ -169,7 +177,13 @@ class _PhoneDialerState extends State<PhoneDialer> {
     void _onItemTapped(int index) {
       setState(() {
         if(index == 1) {
-          Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) => LoadingPage(),
+              transitionDuration: Duration(seconds: 0),
+            ),
+          );
         } else {
           Navigator.pushReplacementNamed(context, "/phoneDialer");
         }
@@ -177,18 +191,8 @@ class _PhoneDialerState extends State<PhoneDialer> {
       });
     }
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 60,
-            ),
-            dialPad()
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
+    BottomNavigationBar bottomNavigationBar() {
+      return BottomNavigationBar(
         backgroundColor: new Color(0xff252549),
 
         items: const <BottomNavigationBarItem>[
@@ -210,7 +214,23 @@ class _PhoneDialerState extends State<PhoneDialer> {
         selectedItemColor: Colors.white,
         unselectedItemColor: Color(0xff8686bd),
         onTap: _onItemTapped,
+      );
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 60,
+            ),
+            dialPad(),
+          ],
+        ),
+
       ),
+        bottomNavigationBar: bottomNavigationBar()
     );
+
   }
 }

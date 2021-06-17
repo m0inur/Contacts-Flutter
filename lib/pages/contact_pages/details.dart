@@ -3,6 +3,7 @@ import 'package:contacts/firebaseContacts.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class ContactDetails extends StatefulWidget {
   @override
@@ -22,6 +23,10 @@ class _ContactDetailsState extends State<ContactDetails> {
   bool updateContact = false;
 
   late Sqflite sqflite;
+
+  void _callNumber() async{
+    FlutterPhoneDirectCaller.callNumber(contact["mobile"].toString());
+  }
 
   void popScreen() {
     String workNumber;
@@ -65,6 +70,55 @@ class _ContactDetailsState extends State<ContactDetails> {
     // );
 
     Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+  }
+
+  Widget contactListTileButtons() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () {
+            // _callNumber(contacts[i].mobile.toString());
+            _callNumber();
+          },
+          child: CircleAvatar(
+            backgroundImage: AssetImage("assets/transparent-circle.png"),
+            backgroundColor: Color(0xff3d3d63),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                Icons.phone,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+            radius: 27,
+          ),
+        ),
+
+        TextButton(
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, "/message", arguments: {
+              "number": contact["mobile"].toString(),
+            });
+          },
+          child: CircleAvatar(
+            backgroundImage: AssetImage("assets/transparent-circle.png"),
+            backgroundColor: Color(0xff3d3d63),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                Icons.messenger,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+            radius: 27,
+          ),
+        ),
+      ],
+    );
   }
 
   Future editDetails() async {
@@ -318,7 +372,6 @@ class _ContactDetailsState extends State<ContactDetails> {
     starIconColor =
         contact["isFavourite"] == true ? Colors.yellow : Colors.white;
     firstLetter = contact["name"][0].toUpperCase();
-    print("Build(_) uId = ${contact["uId"]}");
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -328,7 +381,7 @@ class _ContactDetailsState extends State<ContactDetails> {
       backgroundColor: Color(0xff232338),
 
       body: Container(
-        height: 500,
+        height: 580,
         margin: EdgeInsets.only(top: 10),
         child: Card(
           shape: RoundedRectangleBorder(
@@ -375,6 +428,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                   ],
                 ),
               ),
+
+            contactListTileButtons(),
             ],
           ),
         ),

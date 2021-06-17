@@ -92,128 +92,106 @@ class _ContactsState extends State<Contacts> {
     );
   }
 
-  void _callNumber(number) async{
+  void _callNumber(number) async {
     FlutterPhoneDirectCaller.callNumber(number);
   }
 
-  ListTile contactListTile(i) {
+  Widget contactListTile(i) {
     var letter = "";
     if (i == 0 ||
         contacts[i].name[0].toUpperCase() !=
             contacts[i - 1].name[0].toUpperCase()) {
       letter = contacts[i].name[0].toUpperCase();
     }
-    return ListTile(
-      onTap: () => contactOnTap(i),
-      title: Container(
-        child: Card(
-          elevation: 0,
-          color: Colors.transparent,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // Name letter category
-              Visibility(
-                visible: letter != "",
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                  child: Text(
-                    letter,
-                    style: TextStyle(
-                        color: Colors.blueGrey[300],
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+    return TextButton(
+      onPressed: () {
+        contactOnTap(i);
+      },
+      child: Card(
+        elevation: 0,
+        color: Colors.transparent,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // Name letter category
+            Column(
+              children: [
+                Visibility(
+                  visible: letter != "",
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(
+                      letter,
+                      style: TextStyle(
+                          color: Colors.blueGrey[300],
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              ),
+              ],
+            ),
 
-              Row(
-                children: <Widget>[
-                  contacts[i].isFavourite == true
-                      ? Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        )
-                      : SizedBox(width: 24),
-
-                  SizedBox(width: 10),
-                  // Show avatar
-                  Visibility(
-                    // IF there is no avatar image
-                    visible: contacts[i].avatarImage.path == "",
-                    // Set a random background color
-                    child: CircleAvatar(
-                      backgroundImage:
-                          AssetImage("assets/transparent-circle.png"),
-                      backgroundColor: contacts[i].backgroundColor,
-                      child: Text(
-                        contacts[i].name[0].toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                contacts[i].isFavourite == true ? Icon(
+                  Icons.star,
+                  color: Colors.yellow,
+                ) : SizedBox(width: 24,),
+                // Show avatar
+                Visibility(
+                  // IF there is no avatar image
+                  visible: contacts[i].avatarImage.path == "",
+                  // Set a random background color
+                  child: CircleAvatar(
+                    backgroundImage:
+                        AssetImage("assets/transparent-circle.png"),
+                    backgroundColor: contacts[i].backgroundColor,
+                    child: Text(
+                      contacts[i].name[0].toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-                      radius: 25,
                     ),
+                    radius: 25,
                   ),
-                  Visibility(
-                    // IF there is no avatar image
-                    visible: contacts[i].avatarImage.path != "",
-                    // Set a random background color
-                    // child: Image.file(contacts[i].avatarImage),
-                    child: CircleAvatar(
-                      backgroundImage: FileImage(contacts[i].avatarImage),
-                      radius: 25,
+                ),
+                Visibility(
+                  // IF there is no avatar image
+                  visible: contacts[i].avatarImage.path != "",
+                  // Set a random background color
+                  // child: Image.file(contacts[i].avatarImage),
+                  child: CircleAvatar(
+                    backgroundImage: FileImage(contacts[i].avatarImage),
+                    radius: 25,
+                  ),
+                ),
+
+                SizedBox(width: 25),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${contacts[i].name}",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-
-
-                  SizedBox(width: 25),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${contacts[i].name}",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Text(
-                        "${contacts[i].companyName}",
-                        style: TextStyle(
-                            color: Colors.blueGrey[200],
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(width: 125),
-
-                  TextButton(
-                    onPressed: () {
-                      _callNumber(contacts[i].mobile.toString());
-                    },
-                    child: CircleAvatar(
-                      backgroundImage:
-                      AssetImage("assets/transparent-circle.png"),
-                      backgroundColor: Color(0xff3d3d63),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          Icons.phone,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                      radius: 27,
+                    Text(
+                      "${contacts[i].companyName}",
+                      style: TextStyle(
+                          color: Colors.blueGrey[200],
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -226,7 +204,7 @@ class _ContactsState extends State<Contacts> {
 
   void _onItemTapped(int index) {
     setState(() {
-      if(index == 0) {
+      if (index == 0) {
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
@@ -241,7 +219,6 @@ class _ContactsState extends State<Contacts> {
   BottomNavigationBar bottomNavigationBar() {
     return BottomNavigationBar(
       backgroundColor: new Color(0xff252549),
-
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(
@@ -267,7 +244,7 @@ class _ContactsState extends State<Contacts> {
   @override
   Widget build(BuildContext context) {
     var data = ModalRoute.of(context)?.settings.arguments as Map;
-    if(data["contacts"] == null) {
+    if (data["contacts"] == null) {
       Navigator.pushReplacementNamed(context, "/");
     }
     sqflite = data["sqflite"];
@@ -286,6 +263,7 @@ class _ContactsState extends State<Contacts> {
       body: Column(
         children: <Widget>[
           Expanded(child: contactsList()),
+          // contactsList(),
         ],
       ),
 

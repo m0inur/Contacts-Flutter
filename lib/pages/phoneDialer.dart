@@ -1,8 +1,6 @@
-import 'package:contacts/pages/contact_pages/contacts.dart';
 import 'package:contacts/pages/contact_pages/loading_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class PhoneDialer extends StatefulWidget {
   @override

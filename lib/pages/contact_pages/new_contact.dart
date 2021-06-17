@@ -184,7 +184,6 @@ class _NewContactState extends State<NewContact> {
     var data = ModalRoute.of(context)?.settings.arguments as Map;
     sqflite = data["sqflite"];
     id = data["contactsLen"] + 1;
-    print("Id = ${data["contactsLen"] + 1}");
 
     TextStyle textStyle = TextStyle(
       color: Colors.white70,
@@ -240,7 +239,6 @@ class _NewContactState extends State<NewContact> {
                     : Image.asset('assets/newImage.png', color: Colors.white,),
 
                 iconSize: 100,
-
               ),
               SizedBox(height: 15),
             ],

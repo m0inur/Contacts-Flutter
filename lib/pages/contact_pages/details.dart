@@ -12,7 +12,7 @@ class ContactDetails extends StatefulWidget {
 }
 
 class _ContactDetailsState extends State<ContactDetails> {
-  FirebaseContacts firebaseContacts = FirebaseContacts();
+  FirebaseContacts ?firebaseContacts;
   List<String> items = [
     "Edit",
     "Delete",
@@ -22,6 +22,7 @@ class _ContactDetailsState extends State<ContactDetails> {
   Color starIconColor = Colors.white;
   String firstLetter = "";
   bool updateContact = false;
+  bool isConnectedToFirebase = false;
 
   late Sqflite sqflite;
 
@@ -52,8 +53,9 @@ class _ContactDetailsState extends State<ContactDetails> {
           contact["isFavourite"],
           contact["backgroundColor"],
         );
-    firebaseContacts.updateContact(newContact);
-
+    if(isConnectedToFirebase) {
+      firebaseContacts!.updateContact(newContact);
+    }
 
     print("Set background Color ${contact["backgroundColor"]}");
     // sqflite.updateContact(
@@ -128,16 +130,14 @@ class _ContactDetailsState extends State<ContactDetails> {
     // Go to edits page
     dynamic editedContact =
         await Navigator.pushNamed(context, "/details/edit", arguments: {
-      "name": contact["name"],
-      "mobile": contact["mobile"],
-      "work": contact["work"],
-      "email": contact["email"],
-      "companyName": contact["companyName"],
+          "name": contact["name"],
+          "mobile": contact["mobile"],
+          "work": contact["work"],
+          "email": contact["email"],
+          "companyName": contact["companyName"],
           "avatarImage": contact["avatarImage"],
+          "isConnectedToFirebase": contact["isConnectedToFirebase"],
         });
-
-    print("Edited contact = ");
-    print(editedContact);
 
     // If the user edited the contact data
     if (editedContact is Map) {
@@ -159,19 +159,19 @@ class _ContactDetailsState extends State<ContactDetails> {
         var workNumber = editedContact["work"] == "" ? 89 : int.parse(
             editedContact["work"]);
 
-        // sqflite.updateContact(
-        //     Contact(
-        //         contact["id"],
-        //         editedContact["name"],
-        //         editedContact["companyName"],
-        //         editedContact["email"],
-        //         mobileNumber,
-        //         workNumber,
-        //         editedContact["avatarImage"],
-        //         contact["isFavourite"],
-        //     )
-        // );
-        // print(contact);
+        sqflite.updateContact(
+            Contact(
+                "",
+                contact["id"],
+                editedContact["name"],
+                editedContact["companyName"],
+                editedContact["email"],
+                mobileNumber,
+                workNumber,
+                editedContact["avatarImage"],
+                contact["isFavourite"],
+            )
+        );
       });
     }
   }
@@ -190,8 +190,6 @@ class _ContactDetailsState extends State<ContactDetails> {
           // print("selectedUser = $value");
           if (value == "Delete") {
             deleteContact();
-            // sqflite.deleteContact(contact["id"]);
-            // popScreen();
           } else {
             editDetails();
           }
@@ -299,8 +297,9 @@ class _ContactDetailsState extends State<ContactDetails> {
 
   // Delete contact
   void deleteContact() async {
-    await firebaseContacts.deleteContact(contact["uId"]);
-    Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+    if(isConnectedToFirebase) {
+      await firebaseContacts?.deleteContact(contact["uId"]);
+    }
 
     // String workNumber;
     //
@@ -312,7 +311,7 @@ class _ContactDetailsState extends State<ContactDetails> {
     //   workNumber = contact["work"].toString();
     // }
     // print("Contact uId = ${contact["uId"]}");
-    // var newContact = Contact(
+    // Contact newContact = Contact(
     //   contact["uId"],
     //   contact["id"],
     //   contact["name"],
@@ -325,7 +324,9 @@ class _ContactDetailsState extends State<ContactDetails> {
     //   contact["backgroundColor"],
     // );
 
-    // firebaseContacts.deleteContact(newContact);
+    sqflite.deleteContact(contact["id"]);
+
+    Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
   }
 
   Row detailsData(icon, dataName, text) {
@@ -375,6 +376,7 @@ class _ContactDetailsState extends State<ContactDetails> {
     starIconColor =
         contact["isFavourite"] == true ? Colors.yellow : Colors.white;
     firstLetter = contact["name"][0].toUpperCase();
+    isConnectedToFirebase = contact["isConnectedToFirebase"] == null ? isConnectedToFirebase : contact["isConnectedToFirebase"];
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

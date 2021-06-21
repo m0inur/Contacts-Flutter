@@ -11,10 +11,8 @@ class Edit extends StatefulWidget {
 }
 
 class _EditState extends State<Edit> {
-  FirebaseContacts firebaseContacts = FirebaseContacts();
   Map contact = new Map();
   double maxWidth = 30;
-
   final nameController = TextEditingController();
   final mobileController = TextEditingController();
   final workController = TextEditingController();
@@ -135,7 +133,6 @@ class _EditState extends State<Edit> {
       "companyName": companyNameController.text,
       "avatarImage": contact["avatarImage"]
     });
-    // print("Name: ${nameController.text} Mobile: ${mobileController.text}");
   }
 
   Future getImage() async {

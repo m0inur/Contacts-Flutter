@@ -17,7 +17,8 @@ class _NewContactState extends State<NewContact> {
   final emailController = TextEditingController();
   final mobileController = TextEditingController();
   final workController = TextEditingController();
-  FirebaseContacts firebaseContacts = FirebaseContacts();
+  FirebaseContacts ?firebaseContacts;
+  bool isConnectedToFirebase = false;
 
   double maxWidth = 30;
   int id = 0;
@@ -155,13 +156,11 @@ class _NewContactState extends State<NewContact> {
           _avatarImage.path,
           false);
 
-      print("ID = $id");
-      print(newContact.backgroundColor);
-      // Insert contact into firebase
-      firebaseContacts.addContact(newContact);
-      firebaseContacts.getContacts();
-
-      // insert contact into sqflite
+      if(isConnectedToFirebase) {
+        // Insert contact into databases
+        firebaseContacts!.addContact(newContact);
+      }
+      
       sqflite.insertContact(newContact);
       Navigator.pushReplacementNamed(context, "/");
     }
@@ -184,7 +183,11 @@ class _NewContactState extends State<NewContact> {
     var data = ModalRoute.of(context)?.settings.arguments as Map;
     sqflite = data["sqflite"];
     id = data["contactsLen"] + 1;
+    isConnectedToFirebase = data["isConnectedToFirebase"];
 
+    if(isConnectedToFirebase) {
+      firebaseContacts = FirebaseContacts();
+    }
     TextStyle textStyle = TextStyle(
       color: Colors.white70,
       fontSize: 18,

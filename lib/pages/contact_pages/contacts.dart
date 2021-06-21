@@ -1,9 +1,7 @@
-import 'package:contacts/firebaseContacts.dart';
 import 'package:contacts/pages/phoneDialer.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/contact.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class Contacts extends StatefulWidget {
   @override
@@ -13,8 +11,7 @@ class Contacts extends StatefulWidget {
 class _ContactsState extends State<Contacts> {
   List<Contact> contacts = [];
   Sqflite? sqflite;
-  FirebaseContacts firebaseContacts = FirebaseContacts();
-  bool hasContacts = false;
+  bool isConnectedToFirebase = false;
 
   void contactOnTap(i) {
     // print("${contacts[i]}");
@@ -31,14 +28,15 @@ class _ContactsState extends State<Contacts> {
       "isFavourite": contacts[i].isFavourite,
       "hasRemoved": false,
       "sqflite": sqflite,
+      "isConnectedToFirebase": isConnectedToFirebase,
     });
   }
 
   void saveContact() async {
-    print("Contacts len = ${contacts.length}");
     await Navigator.pushNamed(context, "/new_contact", arguments: {
       "sqflite": sqflite,
       "contactsLen": contacts.length,
+      "isConnectedToFirebase": isConnectedToFirebase
     });
   }
 
@@ -90,10 +88,6 @@ class _ContactsState extends State<Contacts> {
         return contactListTile(i);
       },
     );
-  }
-
-  void _callNumber(number) async {
-    FlutterPhoneDirectCaller.callNumber(number);
   }
 
   Widget contactListTile(i) {
@@ -197,11 +191,6 @@ class _ContactsState extends State<Contacts> {
     );
   }
 
-  Future getContacts() async {
-    await firebaseContacts.getContacts();
-    contacts = firebaseContacts.contacts;
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       if (index == 0) {
@@ -248,15 +237,11 @@ class _ContactsState extends State<Contacts> {
       Navigator.pushReplacementNamed(context, "/");
     }
     sqflite = data["sqflite"];
-    contacts = data["contacts"] == null ? contacts : data["contacts"];
+    contacts = data["contacts"];
+    isConnectedToFirebase = data["hasFirebase"];
+
     contacts
         .sort((a, b) => a.name.toUpperCase().compareTo(b.name.toUpperCase()));
-
-    if (!hasContacts) {
-      getContacts();
-      hasContacts = true;
-    }
-
     return Scaffold(
       // backgroundColor: Colors.black,
       appBar: contactsAppBar(),

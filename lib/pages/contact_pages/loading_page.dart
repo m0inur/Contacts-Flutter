@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lottie/lottie.dart';
+import 'package:connectivity/connectivity.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -14,41 +15,35 @@ class _LoadingPageState extends State<LoadingPage> {
   Sqflite sqflite = Sqflite();
 
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  bool hasConnectedToFirebase = false;
   bool hasContacts = false;
   bool hasErrorConnectingToFirebase = false;
-  bool hasConnectedToFirebase = false;
 
-  void getContacts() async {
-    // await sqflite.getContacts();
-    // hasContacts = true;
+  void getFirebaseContacts() async {
     FirebaseContacts firebaseContacts = FirebaseContacts();
-    // firebaseContacts.deleteContact();
     await firebaseContacts.getContacts();
     var contacts = firebaseContacts.contacts;
-    print("Got Contacts");
 
     Future.delayed(Duration.zero, () {
-      // Navigator.pushReplacement(
-      //   context,
-      //   PageRouteBuilder(
-      //     pageBuilder: (context, animation1, animation2) => Contacts(),
-      //     transitionDuration: Duration(seconds: 0),
-      //   ),
-      //   result: {
-      //       "sqflite": sqflite,
-      //       "contacts": contacts,
-      //   }
-      // );
-
       Navigator.pushReplacementNamed(context, "/contacts", arguments: {
         "sqflite": sqflite,
         "contacts": contacts,
+        "hasFirebase": hasConnectedToFirebase,
       });
     });
   }
 
-  Future firebaseUser() async {
-    return FirebaseAuth.instance.currentUser;
+  void getSqfliteContacts() async {
+    await sqflite.getContacts();
+    hasContacts = true;
+    var contacts = sqflite.contacts;
+    Future.delayed(Duration.zero, () {
+      Navigator.pushReplacementNamed(context, "/contacts", arguments: {
+        "sqflite": sqflite,
+        "contacts": contacts,
+        "hasFirebase": hasConnectedToFirebase,
+      });
+    });
   }
 
   void _onItemTapped(int index) {
@@ -93,6 +88,31 @@ class _LoadingPageState extends State<LoadingPage> {
     );
   }
 
+  void isConnected() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      // Connected to firebase successfully
+      hasConnectedToFirebase = true;
+      print("Connected to firebase");
+
+      // Check if user is logged in or not
+      var user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        // not logged in
+        Future.delayed(Duration.zero, () {
+          Navigator.pushReplacementNamed(context, "/login");
+        });
+      } else {
+        // Logged in
+        getFirebaseContacts();
+      }
+    } else {
+      print("User is not connected");
+      hasConnectedToFirebase = false;
+      getSqfliteContacts();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -107,19 +127,12 @@ class _LoadingPageState extends State<LoadingPage> {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           if(!hasErrorConnectingToFirebase) {
-            print("Connected to firebase");
-            hasConnectedToFirebase = true;
-            // Check if user is logged in or not
-            var user = FirebaseAuth.instance.currentUser;
-            if(user == null) {
-              // not logged in
-              Future.delayed(Duration.zero, () {
-                Navigator.pushReplacementNamed(context, "/login");
-              });
-            } else {
-              // Logged in
-              getContacts();
-            }
+            isConnected();
+          } else {
+            // Failed connecting to firebase
+            // get sqflite contacts
+            print("Failed connecting to firebase");
+            getSqfliteContacts();
           }
           // isConnected();
         }

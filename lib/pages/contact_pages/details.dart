@@ -3,6 +3,7 @@ import 'package:contacts/firebaseContacts.dart';
 import 'package:contacts/sqflite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class ContactDetails extends StatefulWidget {
@@ -98,9 +99,11 @@ class _ContactDetailsState extends State<ContactDetails> {
         ),
 
         TextButton(
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, "/message", arguments: {
-              "number": contact["mobile"].toString(),
+          onPressed: () async {
+            List<String> numbers = [contact["mobile"].toString()];
+            String _result = await sendSMS(message: "", recipients: numbers)
+                .catchError((onError) {
+              print(onError);
             });
           },
           child: CircleAvatar(

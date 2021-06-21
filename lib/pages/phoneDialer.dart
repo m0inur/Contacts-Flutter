@@ -9,6 +9,8 @@ class PhoneDialer extends StatefulWidget {
 
 class _PhoneDialerState extends State<PhoneDialer> {
   final numberController = TextEditingController(text: "");
+  double circleAvatarYGap = 5;
+  double buttonLeftGap = 340;
 
   @override
   void dispose() {
@@ -17,159 +19,164 @@ class _PhoneDialerState extends State<PhoneDialer> {
     super.dispose();
   }
 
-  void _callNumber() async{
+  void _callNumber() async {
     FlutterPhoneDirectCaller.callNumber(numberController.text);
   }
 
-  Widget build(BuildContext context) {
-    Widget circleAvatar(text, fontSize) {
-      return TextButton(
-        onPressed: () {
-          if(numberController.text.length > 15) return;
-          setState(() {
-            numberController.text += text;
-          });
-        },
-
-        child: Column(
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage("assets/transparent-circle.png"),
-              backgroundColor: Color(0xff3d3d63),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  text,
-                  style: TextStyle(color: Colors.white, fontSize: fontSize),
-                ),
+  Widget circleAvatar(text, fontSize) {
+    return TextButton(
+      onPressed: () {
+        if (numberController.text.length > 15) return;
+        setState(() {
+          print(fontSize);
+          numberController.text += text;
+        });
+      },
+      child: Column(
+        children: [
+          CircleAvatar(
+            backgroundImage: AssetImage("assets/transparent-circle.png"),
+            backgroundColor: Color(0xff3d3d63),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                text,
+                style: TextStyle(color: Colors.white, fontSize: fontSize),
               ),
-              radius: 30,
             ),
-            SizedBox(
-              width: 80,
-            ),
-          ],
-        ),
-      );
-    }
+            radius: 30,
+          ),
+          SizedBox(
+            width: 20,
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget build(BuildContext context) {
     Widget dialPad() {
       return Column(
         children: [
-          Padding(
-            padding: EdgeInsets.all(15),
-            child: Text(
-              numberController.text,
-              style: TextStyle(
-                fontSize: 25,
+          Stack(
+            fit: StackFit.loose,
+            children: [
+
+              Padding(
+                padding: EdgeInsets.fromLTRB(90, 15, 15, 15),
+                child: Text(
+                  numberController.text,
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
               ),
-            ),
+
+              Positioned(
+                left: buttonLeftGap,
+                child: TextButton(
+                  onPressed: () {
+                    print("Cut");
+                    var text = numberController.text;
+                    if(text == "") return;
+                    setState(() {
+                      var subString = text.substring(0, text.length - 1);
+
+                      numberController.text = subString;
+                    });
+                  },
+                  child: Icon(
+                    Icons.backspace_outlined,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+
+              Divider(
+                color: Colors.transparent,
+              ),
+            ],
+
+            clipBehavior: Clip.none,
+          ),
+
+          Divider(
+            color: Colors.white,
+            indent: 70,
+            endIndent: 70,
           ),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              circleAvatar("0", 23.0),
               circleAvatar("1", 23.0),
               circleAvatar("2", 23.0),
+              circleAvatar("3", 23.0),
             ],
           ),
-
           SizedBox(
-            height: 15,
+            height: circleAvatarYGap,
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              circleAvatar("3", 23.0),
               circleAvatar("4", 23.0),
               circleAvatar("5", 23.0),
+              circleAvatar("6", 23.0),
             ],
           ),
-
           SizedBox(
-            height: 15,
+            height: circleAvatarYGap,
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              circleAvatar("6", 23.0),
               circleAvatar("7", 23.0),
               circleAvatar("8", 23.0),
+              circleAvatar("9", 23.0),
             ],
           ),
-
           SizedBox(
-            height: 15,
+            height: circleAvatarYGap,
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              circleAvatar("9", 23.0),
-
-              TextButton(
-                onPressed: () {
-                  _callNumber();
-                },
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage:
-                          AssetImage("assets/transparent-circle.png"),
-                      backgroundColor: Color(0xff3d3d63),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          Icons.phone,
-                          color: Colors.white,
-                        ),
-                      ),
-                      radius: 32,
-                    ),
-                    SizedBox(
-                      width: 80,
-                    ),
-                  ],
-                ),
-              ),
-
-              TextButton(
-                onPressed: () {
-                  var text = numberController.text;
-                  if(text == "") return;
-                  setState(() {
-                    var subString = text.substring(0, text.length - 1);
-
-                    numberController.text = subString;
-                  });
-                },
-
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage:
-                      AssetImage("assets/transparent-circle.png"),
-                      backgroundColor: Color(0xff3d3d63),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.white,
-                        ),
-                      ),
-                      radius: 30,
-                    ),
-                    SizedBox(
-                      width: 80,
-                    ),
-                  ],
-                ),
-              ),
+              circleAvatar("*", 40.0),
+              circleAvatar("0", 23.0),
+              circleAvatar("#", 23.0),
             ],
           ),
-
           SizedBox(
-            height: 15,
+            height: circleAvatarYGap,
+          ),
+
+          TextButton(
+            onPressed: () {
+              _callNumber();
+            },
+            child: Column(
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage("assets/transparent-circle.png"),
+                  backgroundColor: Colors.green,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Icon(
+                      Icons.phone,
+                      color: Colors.white,
+                    ),
+                  ),
+                  radius: 30,
+                ),
+                SizedBox(
+                  width: 80,
+                ),
+              ],
+            ),
           ),
         ],
       );
@@ -177,7 +184,7 @@ class _PhoneDialerState extends State<PhoneDialer> {
 
     void _onItemTapped(int index) {
       setState(() {
-        if(index == 1) {
+        if (index == 1) {
           Navigator.pushReplacement(
             context,
             PageRouteBuilder(
@@ -195,7 +202,6 @@ class _PhoneDialerState extends State<PhoneDialer> {
     BottomNavigationBar bottomNavigationBar() {
       return BottomNavigationBar(
         backgroundColor: new Color(0xff252549),
-
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
@@ -219,17 +225,15 @@ class _PhoneDialerState extends State<PhoneDialer> {
     }
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            dialPad(),
-            SizedBox(height: 20),
-          ],
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              dialPad(),
+              SizedBox(height: 20),
+            ],
+          ),
         ),
-
-      ),
-        bottomNavigationBar: bottomNavigationBar()
-    );
+        bottomNavigationBar: bottomNavigationBar());
   }
 }

@@ -82,7 +82,6 @@ class _LoadingPageState extends State<LoadingPage> {
     if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
       // Connected to firebase successfully
       hasConnectedToFirebase = true;
-      print("Connected to firebase");
 
       // Check if user is logged in or not
       var user = FirebaseAuth.instance.currentUser;
@@ -104,7 +103,6 @@ class _LoadingPageState extends State<LoadingPage> {
         changePage(sqfliteContacts);
       }
     } else {
-      print("User is not connected");
       hasConnectedToFirebase = false;
 
       // Get sqflite contacts
@@ -136,13 +134,11 @@ class _LoadingPageState extends State<LoadingPage> {
       hasUpdate = data["hasUpdate"] != null;
     }
 
-    print("build()");
     return FutureBuilder(
       // Initialize FlutterFire:
       future: _initialization,
       builder: (context, snapshot) {
         if(snapshot.hasError) {
-          print("Error connecting to firebase, error = ${snapshot.error}");
           hasErrorConnectingToFirebase = true;
         }
 
@@ -153,7 +149,6 @@ class _LoadingPageState extends State<LoadingPage> {
           } else {
             // Failed connecting to firebase
             // get sqflite contacts
-            print("Failed connecting to firebase");
             setSqfliteContacts();
           }
           // isConnected();

@@ -55,6 +55,9 @@ class _SearchState extends State<Search> {
 
                 contentPadding: new EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
               ),
+              onChanged: (value) {
+                searchContacts();
+              },
             ),
         ),
       ),

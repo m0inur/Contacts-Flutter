@@ -277,7 +277,7 @@ class _ContactDetailsState extends State<ContactDetails> {
           visible: contact["avatarImage"].path != "",
 
           child: Padding(
-            padding: EdgeInsets.only(left: 150, top: 135),
+            padding: EdgeInsets.only(left: 150, top: 50),
             child: CircleAvatar(
               radius: 36,
               backgroundColor: Colors.white,
@@ -365,14 +365,15 @@ class _ContactDetailsState extends State<ContactDetails> {
       backgroundColor: Color(0xff232338),
 
       body: Container(
-        height: 580,
-        margin: EdgeInsets.only(top: 10),
+        // height: 580,
+        margin: EdgeInsets.only(top: 20),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
           elevation: 1,
           margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,13 +407,16 @@ class _ContactDetailsState extends State<ContactDetails> {
                   children: [
                     detailsData(
                         Icons.phone_android, "MOBILE", contact["mobile"]),
+                    SizedBox(height: 15,),
                     detailsData(Icons.phone, "WORK",
                         contact["work"] == 89 ? "" : contact["work"]),
+                    SizedBox(height: 15,),
                     detailsData(Icons.email, "WORK", contact["email"]),
                   ],
                 ),
               ),
 
+            SizedBox(height: 25,),
             contactListTileButtons(),
             ],
           ),

@@ -28,7 +28,6 @@ class _PhoneDialerState extends State<PhoneDialer> {
       onPressed: () {
         if (numberController.text.length > 15) return;
         setState(() {
-          print(fontSize);
           numberController.text += text;
         });
       },
@@ -76,7 +75,6 @@ class _PhoneDialerState extends State<PhoneDialer> {
                 left: buttonLeftGap,
                 child: TextButton(
                   onPressed: () {
-                    print("Cut");
                     var text = numberController.text;
                     if(text == "") return;
                     setState(() {

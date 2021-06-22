@@ -1,3 +1,4 @@
+import 'package:contacts/contact.dart';
 import 'package:contacts/firebaseContacts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,32 +19,20 @@ class _LoadingPageState extends State<LoadingPage> {
   bool hasConnectedToFirebase = false;
   bool hasContacts = false;
   bool hasErrorConnectingToFirebase = false;
+  bool hasUpdate = false;
+  List<Contact> sqfliteContacts = [];
+  List<Contact> firebaseContacts = [];
 
-  void getFirebaseContacts() async {
-    FirebaseContacts firebaseContacts = FirebaseContacts();
-    await firebaseContacts.getContacts();
-    var contacts = firebaseContacts.contacts;
-
-    Future.delayed(Duration.zero, () {
-      Navigator.pushReplacementNamed(context, "/contacts", arguments: {
-        "sqflite": sqflite,
-        "contacts": contacts,
-        "hasFirebase": hasConnectedToFirebase,
-      });
-    });
+  Future setFirebaseContacts() async {
+    FirebaseContacts firebase = FirebaseContacts();
+    await firebase.getContacts();
+    firebaseContacts = firebase.contacts;
   }
 
-  void getSqfliteContacts() async {
+  Future setSqfliteContacts() async {
     await sqflite.getContacts();
     hasContacts = true;
-    var contacts = sqflite.contacts;
-    Future.delayed(Duration.zero, () {
-      Navigator.pushReplacementNamed(context, "/contacts", arguments: {
-        "sqflite": sqflite,
-        "contacts": contacts,
-        "hasFirebase": hasConnectedToFirebase,
-      });
-    });
+    sqfliteContacts = sqflite.contacts;
   }
 
   void _onItemTapped(int index) {
@@ -104,17 +93,50 @@ class _LoadingPageState extends State<LoadingPage> {
         });
       } else {
         // Logged in
-        getFirebaseContacts();
+        FirebaseContacts firebase = FirebaseContacts();
+        await setFirebaseContacts();
+        await setSqfliteContacts();
+
+        if(firebaseContacts.length != sqfliteContacts.length || hasUpdate) {
+          await sqflite.setContacts(firebaseContacts);
+          await firebase.setContacts(sqfliteContacts);
+        }
+        changePage(sqfliteContacts);
       }
     } else {
       print("User is not connected");
       hasConnectedToFirebase = false;
-      getSqfliteContacts();
+
+      // Get sqflite contacts
+      await setSqfliteContacts();
+      changePage(sqfliteContacts);
     }
+  }
+
+  void changePage(contacts) {
+    Future.delayed(Duration.zero, () {
+      Navigator.pushReplacementNamed(context, "/contacts", arguments: {
+        "sqflite": sqflite,
+        "contacts": contacts,
+        "hasFirebase": hasConnectedToFirebase,
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var data = ModalRoute.of(context)?.settings.arguments;
+    if(data != null) {
+      data = data as Map;
+      hasUpdate = data["hasUpdate"] != null;
+    }
+
+    print("build()");
     return FutureBuilder(
       // Initialize FlutterFire:
       future: _initialization,
@@ -132,7 +154,7 @@ class _LoadingPageState extends State<LoadingPage> {
             // Failed connecting to firebase
             // get sqflite contacts
             print("Failed connecting to firebase");
-            getSqfliteContacts();
+            setSqfliteContacts();
           }
           // isConnected();
         }

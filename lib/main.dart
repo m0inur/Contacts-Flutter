@@ -3,6 +3,7 @@ import 'package:contacts/pages/authentication/signUp.dart';
 import 'package:contacts/pages/contact_pages/loading_page.dart';
 import 'package:contacts/pages/message.dart';
 import 'package:contacts/pages/phoneDialer.dart';
+import 'package:contacts/pages/search.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts/pages/contact_pages/details.dart';
 import 'package:contacts/pages/contact_pages/edit.dart';
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         "/message": (context) => Message(),
         "/signup": (context) => SignUp(),
         "/login": (context) => Login(),
+        "/search": (context) => Search(),
       },
     );
   }

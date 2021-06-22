@@ -6,7 +6,6 @@ class Contact {
   List<Color> avatarColors = [
     Colors.deepOrange,
     Colors.blue,
-    Colors.yellow,
     Colors.orangeAccent,
     Colors.teal,
     Colors.deepPurple,
@@ -37,7 +36,6 @@ class Contact {
     this.companyName = companyName;
     this.email = email;
     this.mobile = mobile is String ? int.parse(mobile) : mobile;
-
     this.work = work is int ? work : int.parse(work);
 
     if(avatarImage is String) {
@@ -84,6 +82,6 @@ class Contact {
   // each dog when using the print statement.
   @override
   String toString() {
-    return 'Contact{name: $name, company name: $companyName, e-mail: $email, avatarImage: ${avatarImage.path}, mobile: $mobile, work: $work, isFavourite: $isFavourite}';
+    return 'Contact{uId: $uId id: $id name: $name, company name: $companyName, e-mail: $email, avatarImage: ${avatarImage.path}, mobile: $mobile, work: $work, isFavourite: $isFavourite}';
   }
 }

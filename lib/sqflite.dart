@@ -4,7 +4,8 @@ import 'package:sqflite/sqflite.dart';
 
 class Sqflite {
   dynamic database;
-  late List<Contact> contacts;
+  List<Contact> contacts = [];
+  List<Contact> searchedContacts = [];
 
   Future getDatabase() async {
     // IF we already have the database
@@ -62,6 +63,47 @@ class Sqflite {
           maps[i]['backgroundColor'],
       );
     });
+  }
+
+  Future getContactsWith(name) async {
+    // Future<List<Contact>> getContacts() async {
+    await getDatabase();
+    // Get a reference to the database.
+    final db = await database;
+
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> maps = await db.rawQuery("SELECT * FROM contacts WHERE name LIKE '$name%'");
+
+    searchedContacts = List.generate(maps.length, (i) {
+      return Contact(
+        maps[i]['uId'],
+        maps[i]['id'],
+        maps[i]['name'],
+        maps[i]['companyName'],
+        maps[i]['email'],
+        maps[i]['mobile'],
+        maps[i]['work'],
+        maps[i]['avatarImage'],
+        maps[i]['isFavourite'],
+        maps[i]['backgroundColor'],
+      );
+    });
+  }
+
+  Future setContacts(List<Contact> firebaseContacts) async {
+    // Future<List<Contact>> getContacts() async {
+    await getDatabase();
+    // Get a reference to the database.
+    final db = await database;
+
+    for(var i = 0; i < firebaseContacts.length; i++) {
+      var matchingId = db.rawQuery("SELECT name FROM contacts WHERE name = ?", [firebaseContacts[i].name]);
+      // If there is no matching id
+      // print(matchingId);
+      if(matchingId == null) {
+        insertContact(firebaseContacts[i]);
+      }
+    }
   }
 
   Future<void> updateContact(Contact contact) async {

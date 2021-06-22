@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts/contact.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/widgets.dart';
 
 class FirebaseContacts {
   CollectionReference contactsCollection = FirebaseFirestore.instance
@@ -10,8 +11,6 @@ class FirebaseContacts {
       .collection("Contacts");
 
   List<Contact> contacts = [];
-
-  // Contact(id, name, companyName, email, mobile, work, avatarImage, isFavourite, [color]) {
 
   Future deleteContact(String uId) async {
     if(FirebaseAuth.instance.currentUser == null) return;
@@ -25,6 +24,7 @@ class FirebaseContacts {
 
   void updateContact(Contact contact) async {
     if(FirebaseAuth.instance.currentUser == null) return;
+    print(contact);
     await FirebaseFirestore.instance
         .collection('ContactsDB')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -76,5 +76,34 @@ class FirebaseContacts {
       // print(contacts);
       });
     });
+  }
+
+  Future setContacts(List<Contact> sqfliteContacts) async {
+    await FirebaseFirestore.instance
+        .collection('ContactsDB')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("Contacts")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((contact) {
+        deleteContact(contact.id);
+      });
+    });
+
+    for(var i = 0; i < sqfliteContacts.length; i++) {
+      var hasMatched = false;
+      // print("Check if ${sqfliteContacts[i].name} exists");
+      for(var j = 0; j < contacts.length; j++) {
+        // print("${sqfliteContacts[i].name} == ${contacts[j].name}");
+        if(sqfliteContacts[i].name == contacts[j].name) {
+          hasMatched = true;
+          break;
+        }
+      }
+
+      if(!hasMatched) {
+        addContact(sqfliteContacts[i]);
+      }
+    }
   }
 }

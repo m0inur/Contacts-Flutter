@@ -11,7 +11,10 @@ class Contacts extends StatefulWidget {
 class _ContactsState extends State<Contacts> {
   List<Contact> contacts = [];
   Sqflite? sqflite;
+  AppBar ?appBar;
+
   bool isConnectedToFirebase = false;
+  bool isSearching = false;
 
   void contactOnTap(i) {
     // print("${contacts[i]}");
@@ -64,7 +67,12 @@ class _ContactsState extends State<Contacts> {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, "/search", arguments: {
+              "sqflite": sqflite,
+              "isConnectedToFirebase": isConnectedToFirebase,
+            });
+          },
           icon: new Icon(
             Icons.search,
             size: 30,
@@ -109,6 +117,7 @@ class _ContactsState extends State<Contacts> {
           children: <Widget>[
             // Name letter category
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Visibility(
                   visible: letter != "",
@@ -127,12 +136,15 @@ class _ContactsState extends State<Contacts> {
             ),
 
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 contacts[i].isFavourite == true ? Icon(
                   Icons.star,
                   color: Colors.yellow,
                 ) : SizedBox(width: 24,),
+
+                SizedBox(width: 10,),
+
                 // Show avatar
                 Visibility(
                   // IF there is no avatar image
@@ -242,9 +254,14 @@ class _ContactsState extends State<Contacts> {
 
     contacts
         .sort((a, b) => a.name.toUpperCase().compareTo(b.name.toUpperCase()));
+    if(isSearching) {
+      // appBar = searchBarAppbar();
+    } else {
+      appBar = contactsAppBar();
+    }
     return Scaffold(
       // backgroundColor: Colors.black,
-      appBar: contactsAppBar(),
+      appBar: appBar,
       body: Column(
         children: <Widget>[
           Expanded(child: contactsList()),

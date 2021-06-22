@@ -23,7 +23,7 @@ class _ContactDetailsState extends State<ContactDetails> {
   String firstLetter = "";
   bool updateContact = false;
   bool isConnectedToFirebase = false;
-
+  bool isSearched = false;
   late Sqflite sqflite;
 
   void _callNumber() async{
@@ -53,26 +53,23 @@ class _ContactDetailsState extends State<ContactDetails> {
           contact["isFavourite"],
           contact["backgroundColor"],
         );
-    if(isConnectedToFirebase) {
-      firebaseContacts!.updateContact(newContact);
-    }
+    // if(isConnectedToFirebase) {
+    //   if(firebaseContacts != null) {
+    //     firebaseContacts!.updateContact(newContact);
+    //   }
+    // }
+    sqflite.updateContact(newContact);
 
     print("Set background Color ${contact["backgroundColor"]}");
-    // sqflite.updateContact(
-    //     Contact(
-    //       contact["id"],
-    //       contact["name"],
-    //       contact["companyName"],
-    //       contact["email"],
-    //       contact["mobile"],
-    //       workNumber,
-    //       contact["avatarImage"],
-    //       contact["isFavourite"],
-    //       contact["backgroundColor"],
-    //     )
-    // );
 
-    Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+    if(!isSearched) {
+      Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false, arguments: {
+        "hasUpdate": true,
+      });
+    } else {
+      Navigator.pop(context);
+    }
+
   }
 
   Widget contactListTileButtons() {
@@ -300,30 +297,6 @@ class _ContactDetailsState extends State<ContactDetails> {
     if(isConnectedToFirebase) {
       await firebaseContacts?.deleteContact(contact["uId"]);
     }
-
-    // String workNumber;
-    //
-    // if(contact["work"] == "") {
-    //   print("Work is empty");
-    //   workNumber = "87";
-    // } else {
-    //   print("Work is not empty");
-    //   workNumber = contact["work"].toString();
-    // }
-    // print("Contact uId = ${contact["uId"]}");
-    // Contact newContact = Contact(
-    //   contact["uId"],
-    //   contact["id"],
-    //   contact["name"],
-    //   contact["companyName"],
-    //   contact["email"],
-    //   contact["mobile"],
-    //   workNumber,
-    //   contact["avatarImage"],
-    //   contact["isFavourite"],
-    //   contact["backgroundColor"],
-    // );
-
     sqflite.deleteContact(contact["id"]);
 
     Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
@@ -377,6 +350,12 @@ class _ContactDetailsState extends State<ContactDetails> {
         contact["isFavourite"] == true ? Colors.yellow : Colors.white;
     firstLetter = contact["name"][0].toUpperCase();
     isConnectedToFirebase = contact["isConnectedToFirebase"] == null ? isConnectedToFirebase : contact["isConnectedToFirebase"];
+
+    if(isConnectedToFirebase) {
+      firebaseContacts = FirebaseContacts();
+    }
+
+    isSearched = contact["isSearched"] != null;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

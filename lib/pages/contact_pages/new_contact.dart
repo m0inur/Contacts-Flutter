@@ -79,19 +79,25 @@ class _NewContactState extends State<NewContact> {
         SizedBox(width: 20),
 
         Text(
-          text,
+          "$text",
           style: textStyle,
         ),
         // print(_textSize(text, TextStyle(fontSize: 18))),
-        SizedBox(width: nameAndDividerGap),
-
-        VerticalDivider(
-          color: Colors.white,
-          thickness: 1,
-          width: 5,
-          indent: 7,
-          endIndent: 7,
+        SizedBox(width: nameAndDividerGap - 15),
+        Text(
+          ":",
+          style: TextStyle(
+            fontSize: 21
+          ),
         ),
+        SizedBox(width: 10),
+        // VerticalDivider(
+        //   color: Colors.white,
+        //   thickness: 1,
+        //   width: 5,
+        //   indent: 7,
+        //   endIndent: 7,
+        // ),
 
         Expanded(
           child: TextFormField(
@@ -215,7 +221,7 @@ class _NewContactState extends State<NewContact> {
                   SizedBox(height: 15,),
 
                   // Company name field
-                  inputField("Company Name", textStyle, companyNameController,
+                  inputField("Organization", textStyle, companyNameController,
                       30.0, TextInputType.emailAddress),
                   SizedBox(height: 15,),
 

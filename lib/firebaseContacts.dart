@@ -90,11 +90,12 @@ class FirebaseContacts {
       });
     });
 
+    // print("Sqflite data: $sqfliteContacts");
     for(var i = 0; i < sqfliteContacts.length; i++) {
       var hasMatched = false;
       // print("Check if ${sqfliteContacts[i].name} exists");
       for(var j = 0; j < contacts.length; j++) {
-        // print("${sqfliteContacts[i].name} == ${contacts[j].name}");
+        print("${sqfliteContacts[i].name} == ${contacts[j].name}");
         if(sqfliteContacts[i].name == contacts[j].name) {
           hasMatched = true;
           break;

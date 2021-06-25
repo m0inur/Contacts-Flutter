@@ -12,11 +12,11 @@ class Sqflite {
     if (database != null) return;
 
     database = openDatabase(
-      join(await getDatabasesPath(), 'contacts_db.db'),
+      join(await getDatabasesPath(), 'contacts_database.db'),
       onCreate: (db, version) {
         print("Creating");
         return db.execute(
-          'CREATE TABLE contacts(id INTEGER PRIMARY KEY, name TEXT, companyName TEXT, email TEXT, avatarImage TEXT, backgroundColor TEXT, mobile INT, work INT, isFavourite INT)',
+          'CREATE TABLE contact(id INTEGER PRIMARY KEY, name TEXT, companyName TEXT, email TEXT, avatarImage TEXT, backgroundColor TEXT, mobile INT, work INT, isFavourite INT)',
         );
       },
       version: 1,
@@ -32,8 +32,9 @@ class Sqflite {
     // Get database
     await getDatabase();
     final db = await database;
+    // print("Inserting contact");
     await db.insert(
-      'contacts',
+      'contact',
       contact.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -46,7 +47,7 @@ class Sqflite {
     final db = await database;
 
     // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> maps = await db.query('contacts');
+    final List<Map<String, dynamic>> maps = await db.query('contact');
 
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     contacts = List.generate(maps.length, (i) {
@@ -72,8 +73,8 @@ class Sqflite {
     final db = await database;
 
     // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> maps = await db.rawQuery("SELECT * FROM contacts WHERE name LIKE '$name%'");
-
+    final List<Map<String, dynamic>> maps = await db.rawQuery("SELECT * FROM contact WHERE name LIKE '$name%'");
+    print(maps);
     searchedContacts = List.generate(maps.length, (i) {
       return Contact(
         maps[i]['uId'],
@@ -97,13 +98,15 @@ class Sqflite {
     final db = await database;
 
     for(var i = 0; i < firebaseContacts.length; i++) {
-      var matchingId = db.rawQuery("SELECT name FROM contacts WHERE name = ?", [firebaseContacts[i].name]);
+      // var matchingId = db.rawQuery("SELECT name FROM contacts WHERE name = ?", [firebaseContacts]);
       // If there is no matching id
-      // print(matchingId);
-      if(matchingId == null) {
+      // if(matchingId != null) {
         insertContact(firebaseContacts[i]);
-      }
+      // }
     }
+
+    print(firebaseContacts);
+    print(contacts);
   }
 
   Future<void> updateContact(Contact contact) async {
@@ -113,7 +116,7 @@ class Sqflite {
 
     // Update the given Dog.
     await db.update(
-      'contacts',
+      'contact',
       contact.toMap(),
       // Ensure that the Dog has a matching id.
       where: 'id = ?',
@@ -129,7 +132,7 @@ class Sqflite {
 
     // Remove the Dog from the database.
     await db.delete(
-      'contacts',
+      'contact',
       // Use a `where` clause to delete a specific dog.
       where: 'id = ?',
       // Pass the Dog's id as a whereArg to prevent SQL injection.

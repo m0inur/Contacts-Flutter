@@ -121,6 +121,50 @@ class _NewContactState extends State<NewContact> {
       ]),
     );
   }
+  // Widget inputField(
+  //     text, myController, type) {
+  //   return IntrinsicHeight(
+  //     child: Padding(
+  //       padding: const EdgeInsets.only(left: 40, right: 40),
+  //       child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(text.toUpperCase(), style: TextStyle(
+  //               fontWeight: FontWeight.bold,
+  //               letterSpacing: 1.3,
+  //               color: Color(0xff7f82bb),
+  //             ),),
+  //             SizedBox(height: 10,),
+  //             Expanded(
+  //               child: TextFormField(
+  //                 style: TextStyle(color: Colors.white,),
+  //                 controller: myController,
+  //                 keyboardType: type,
+  //
+  //                 decoration: new InputDecoration(
+  //                   fillColor: Color(0xff1f1f34),
+  //                   filled: true,
+  //
+  //                   enabledBorder: new OutlineInputBorder(
+  //                     borderRadius: new BorderRadius.circular(10),
+  //                     borderSide: new BorderSide(
+  //                         color: Colors.transparent
+  //                     ),
+  //                   ),
+  //
+  //                   focusedBorder: new OutlineInputBorder(
+  //                     borderRadius: new BorderRadius.circular(10),
+  //                     borderSide: new BorderSide(
+  //                         color: Colors.transparent
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ]),
+  //     ),
+  //   );
+  // }
 
   Widget customVerticalRow() {
     return Flexible(
@@ -232,6 +276,27 @@ class _NewContactState extends State<NewContact> {
                   inputField("Work", textStyle, workController, 37.0,
                       TextInputType.number),
                   SizedBox(height: 15,),
+
+
+                  // // Name field
+                  // inputField("Name", nameController,
+                  //     TextInputType.name),
+                  // SizedBox(height: 15,),
+                  //
+                  // // E-mail field
+                  // inputField("E-Mail", emailController,
+                  //     TextInputType.emailAddress),
+                  // SizedBox(height: 15,),
+                  //
+                  // // Company name field
+                  // inputField("Organization", companyNameController, TextInputType.emailAddress),
+                  // SizedBox(height: 15,),
+                  //
+                  // inputField("Mobile", mobileController, TextInputType.number),
+                  // SizedBox(height: 15,),
+                  //
+                  // inputField("Work", workController, TextInputType.number),
+                  // SizedBox(height: 15,),
                 ]
               ),
 

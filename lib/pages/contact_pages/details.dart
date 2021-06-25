@@ -53,19 +53,22 @@ class _ContactDetailsState extends State<ContactDetails> {
           contact["isFavourite"],
           contact["backgroundColor"],
         );
-    // if(isConnectedToFirebase) {
-    //   if(firebaseContacts != null) {
-    //     firebaseContacts!.updateContact(newContact);
-    //   }
-    // }
+    if(isConnectedToFirebase) {
+      if(firebaseContacts != null) {
+        firebaseContacts!.updateContact(newContact);
+      }
+    }
     sqflite.updateContact(newContact);
 
     print("Set background Color ${contact["backgroundColor"]}");
 
     if(!isSearched) {
-      Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false, arguments: {
-        "hasUpdate": true,
+      Navigator.pushNamed(context, "/", arguments: {
+      "hasUpdate": true,
       });
+      // Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false, arguments: {
+      //   "hasUpdate": true,
+      // });
     } else {
       Navigator.pop(context);
     }

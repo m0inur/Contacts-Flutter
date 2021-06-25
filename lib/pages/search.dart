@@ -197,11 +197,17 @@ class _SearchState extends State<Search> {
     });
   }
 
+  Future getContacts() async {
+    sqflite?.getContacts();
+    print(sqflite?.contacts);
+  }
+
   @override
   Widget build(BuildContext context) {
     var data = ModalRoute.of(context)?.settings.arguments as Map;
     sqflite = data["sqflite"];
     isConnectedToFirebase = data["isConnectedToFirebase"];
+    getContacts();
 
     return Scaffold(
       appBar: appBar(),

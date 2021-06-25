@@ -29,10 +29,11 @@ class _LoadingPageState extends State<LoadingPage> {
     firebaseContacts = firebase.contacts;
   }
 
-  Future setSqfliteContacts() async {
+  Future<String> setSqfliteContacts() async {
     await sqflite.getContacts();
     hasContacts = true;
     sqfliteContacts = sqflite.contacts;
+    return "done";
   }
 
   void _onItemTapped(int index) {
@@ -95,12 +96,15 @@ class _LoadingPageState extends State<LoadingPage> {
         FirebaseContacts firebase = FirebaseContacts();
         await setFirebaseContacts();
         await setSqfliteContacts();
+        // print("Firebase contacts: ");
+        // print(firebaseContacts);
 
-        if(firebaseContacts.length != sqfliteContacts.length || hasUpdate) {
-          await sqflite.setContacts(firebaseContacts);
-          await firebase.setContacts(sqfliteContacts);
-        }
-        changePage(sqfliteContacts);
+        // if(firebaseContacts.length != sqfliteContacts.length || hasUpdate) {
+        //   print("Set contacts to both databases");
+        //   await setSqfliteContacts();
+        //   await firebase.setContacts(sqfliteContacts);
+        // }
+        changePage(firebaseContacts);
       }
     } else {
       hasConnectedToFirebase = false;
@@ -113,17 +117,12 @@ class _LoadingPageState extends State<LoadingPage> {
 
   void changePage(contacts) {
     Future.delayed(Duration.zero, () {
-      Navigator.pushReplacementNamed(context, "/contacts", arguments: {
+      Navigator.pushNamed(context, "/contacts", arguments: {
         "sqflite": sqflite,
         "contacts": contacts,
         "hasFirebase": hasConnectedToFirebase,
       });
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
